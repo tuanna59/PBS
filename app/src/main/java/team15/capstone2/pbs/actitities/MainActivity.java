@@ -11,6 +11,7 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
 import team15.capstone2.pbs.adapters.BottomBarAdapter;
 import team15.capstone2.pbs.fragments.CarsFragment;
+import team15.capstone2.pbs.fragments.NotificationFragment;
 import team15.capstone2.pbs.viewholders.NoSwipePager;
 import team15.capstone2.pbs.fragments.ProfileFragment;
 import team15.capstone2.pbs.R;
@@ -18,9 +19,13 @@ import team15.capstone2.pbs.fragments.MapFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    AHBottomNavigation bottomNavigation;
+    private AHBottomNavigation bottomNavigation;
     private NoSwipePager viewPager;
     private BottomBarAdapter pagerAdapter;
+    private MapFragment mapFragment;
+    private CarsFragment carsFragment;
+    private NotificationFragment notificationFragment;
+    private ProfileFragment profileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +33,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
-
-        final android.support.v4.app.Fragment fragment = new android.support.v4.app.Fragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.frame, fragment, "fragment");
 
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(getString(R.string.tab_name1), R.drawable.ic_map_24, fetchColor(R.color.bottomtab_0));
         AHBottomNavigationItem item2 = new AHBottomNavigationItem(getString(R.string.tab_name2), R.drawable.ic_cars_24, fetchColor(R.color.bottomtab_2));
@@ -66,12 +68,19 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = (NoSwipePager) findViewById(R.id.viewpager);
         viewPager.setPagingEnabled(false);
+        // Save state of fragment between 3 fragment (do not destroy and create new fragment)
+        viewPager.setOffscreenPageLimit(3);
         pagerAdapter = new BottomBarAdapter(getSupportFragmentManager());
 
-        pagerAdapter.addFragments(new MapFragment());
-        pagerAdapter.addFragments(new CarsFragment());
-        pagerAdapter.addFragments(new CarsFragment());
-        pagerAdapter.addFragments(new ProfileFragment());
+        mapFragment = new MapFragment();
+        carsFragment = new CarsFragment();
+        notificationFragment = new NotificationFragment();
+        profileFragment = new ProfileFragment();
+
+        pagerAdapter.addFragments(mapFragment);
+        pagerAdapter.addFragments(carsFragment);
+        pagerAdapter.addFragments(notificationFragment);
+        pagerAdapter.addFragments(profileFragment);
 
         viewPager.setAdapter(pagerAdapter);
     }
