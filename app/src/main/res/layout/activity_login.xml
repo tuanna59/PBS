@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/activity_hozizontal_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:background="@color/colorPrimaryDark"
-    tools:context="team15.capstone2.pbs.LoginActivity">
+    tools:context="team15.capstone2.pbs.actitities.LoginActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

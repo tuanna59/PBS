@@ -1,4 +1,4 @@
-package team15.capstone2.pbs;
+package team15.capstone2.pbs.viewholders;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;

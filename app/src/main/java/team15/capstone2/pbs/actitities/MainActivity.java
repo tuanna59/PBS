@@ -1,15 +1,20 @@
-package team15.capstone2.pbs;
+package team15.capstone2.pbs.actitities;
 
-import android.app.Fragment;
 import android.graphics.Color;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+
+import team15.capstone2.pbs.adapters.BottomBarAdapter;
+import team15.capstone2.pbs.fragments.CarsFragment;
+import team15.capstone2.pbs.viewholders.NoSwipePager;
+import team15.capstone2.pbs.fragments.ProfileFragment;
+import team15.capstone2.pbs.R;
+import team15.capstone2.pbs.fragments.MapFragment;
 
 public class MainActivity extends AppCompatActivity {
 

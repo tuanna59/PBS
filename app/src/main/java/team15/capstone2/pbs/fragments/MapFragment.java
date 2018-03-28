@@ -1,4 +1,4 @@
-package team15.capstone2.pbs;
+package team15.capstone2.pbs.fragments;
 
 import android.Manifest;
 import android.content.Context;
@@ -24,6 +24,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
+
+import team15.capstone2.pbs.R;
 
 public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, OnMapReadyCallback {
 

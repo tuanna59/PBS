@@ -15,7 +15,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:background="#EFEFEF"/>
 
-    <team15.capstone2.pbs.NoSwipePager
+    <team15.capstone2.pbs.viewholders.NoSwipePager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

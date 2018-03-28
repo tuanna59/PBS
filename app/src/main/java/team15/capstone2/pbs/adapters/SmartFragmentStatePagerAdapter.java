@@ -1,4 +1,4 @@
-package team15.capstone2.pbs;
+package team15.capstone2.pbs.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
