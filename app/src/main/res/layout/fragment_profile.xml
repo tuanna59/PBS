@@ -1,14 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.ProfileFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Profile" />
+        android:paddingBottom="60dp"
+        android:scrollbars="none"
+        tools:background="@color/bg_light">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/header_container"
+                android:layout_height="100dp"
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="@dimen/cardview_profile_margin_edge"
+                android:layout_marginLeft="@dimen/cardview_profile_margin_edge"
+                >
+                <ImageView
+                    android:id="@+id/qr_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/qr_test"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitStart"/>
+
+            </FrameLayout>
+
+            <android.support.v7.widget.CardView
+                style="@style/cardView_profile_style"
+                app:cardCornerRadius="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView11"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:textStyle="bold"
+                        android:textSize="14dp"
+                        android:paddingTop="5dp"
+                        android:text="Personal Information" />
+
+                    <TextView
+                        android:id="@+id/txtCarsManager"
+                        style="@style/textView_profile_style"
+                        android:text="Cars Manager" />
+
+                    <TextView
+                        android:id="@+id/txtHistory"
+                        style="@style/textView_profile_style"
+                        android:text="History" />
+
+                    <TextView
+                        android:id="@+id/txtWallet"
+                        style="@style/textView_profile_style"
+                        android:text="Wallet" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                style="@style/cardView_profile_style"
+                app:cardCornerRadius="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView12"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:textStyle="bold"
+                        android:textSize="14dp"
+                        android:paddingTop="5dp"
+                        android:text="Account Setting" />
+
+                    <TextView
+                        android:id="@+id/txtAccount"
+                        style="@style/textView_profile_style"
+                        android:text="Account" />
+
+                    <TextView
+                        android:id="@+id/txtChangePassword"
+                        style="@style/textView_profile_style"
+                        android:text="Change Password" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                style="@style/cardView_profile_style"
+                app:cardCornerRadius="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView13"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:textStyle="bold"
+                        android:textSize="14dp"
+                        android:paddingTop="5dp"
+                        android:text="Support" />
+
+                    <TextView
+                        android:id="@+id/txtFeedback"
+                        style="@style/textView_profile_style"
+                        android:text="Feedback" />
+
+                    <TextView
+                        android:id="@+id/txtGuide"
+                        style="@style/textView_profile_style"
+                        android:text="Guide" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                app:cardCornerRadius="4dp"
+                style="@style/cardView_profile_style" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView14"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:textStyle="bold"
+                        android:textSize="14dp"
+                        android:paddingTop="5dp"
+                        android:text="About Us" />
+
+                    <TextView
+                        android:id="@+id/txtEmail"
+                        style="@style/textView_profile_style"
+                        android:text="Email" />
+
+                    <TextView
+                        android:id="@+id/txtToP"
+                        style="@style/textView_profile_style"
+                        android:text="Terms and policies" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                app:cardCornerRadius="4dp"
+                style="@style/cardView_profile_style">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txtLogout"
+                        style="@style/textView_profile_style"
+                        android:text="Logout" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>
