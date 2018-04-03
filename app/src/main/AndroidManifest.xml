@@ -2,10 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="team15.capstone2.pbs">
 
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -20,19 +24,38 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:label="@string/app_name" android:name=".actitities.MainActivity"/>
+        <activity
+            android:name=".actitities.MainActivity"
+            android:label="@string/app_name" />
 
-        <!--Maps Android Key-->
+        <!-- Maps Android Key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAd9_CnP8ez-9grN81TqLheNCEmHaiQtts" />
 
-        <!--Maps-->
+        <!-- Maps -->
 
+        <activity
+            android:name=".actitities.WalletActivity"
+            android:parentActivityName=".actitities.MainActivity" />
+        <activity
+            android:name=".actitities.CarsManagerActivity"
+            android:parentActivityName=".actitities.MainActivity" />
+        <activity
+            android:name=".actitities.HistoryActivity"
+            android:parentActivityName=".actitities.MainActivity" />
+        <activity
+            android:name=".actitities.AccountActivity"
+            android:parentActivityName=".actitities.MainActivity" />
+        <activity
+            android:name=".actitities.FeedbackActivity"
+            android:parentActivityName=".actitities.MainActivity" />
+        <activity
+            android:name=".actitities.RegisterActivity"
+            android:label="@string/title_activity_register"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".actitities.BookingActivity" />
+        <activity android:name=".actitities.BookingDetailActivity"></activity>
     </application>
-
-    <uses-feature
-        android:glEsVersion="0x00020000"
-        android:required="true"/>
 
 </manifest>
