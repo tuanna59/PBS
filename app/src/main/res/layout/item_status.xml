@@ -24,7 +24,7 @@
             tools:src="@drawable/app_logo" />
 
         <TextView
-            android:id="@+id/car_license"
+            android:id="@+id/parking_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -35,14 +35,14 @@
             android:textSize="16dp" />
 
         <TextView
-            android:id="@+id/time"
+            android:id="@+id/available_slots"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:textAlignment="center"
             android:layout_marginLeft="50dp"
             android:layout_marginTop="5dp"
-            android:layout_toRightOf="@+id/car_license"
+            android:layout_toRightOf="@+id/parking_name"
             tools:text="13:00 03/12/2013"
             android:textColor="@color/bottomtab_0"
             android:textSize="12dp" />
@@ -51,7 +51,7 @@
             android:id="@+id/parking_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/car_license"
+            android:layout_below="@+id/parking_name"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/ic_trans"
             android:textColor="@color/cardview_dark_background"

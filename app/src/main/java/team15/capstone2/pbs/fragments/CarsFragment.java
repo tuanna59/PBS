@@ -62,9 +62,9 @@ public class CarsFragment extends Fragment {
 
         public ViewHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.item_status, parent, false));
-            carLicense = (TextView) itemView.findViewById(R.id.car_license);
+            carLicense = (TextView) itemView.findViewById(R.id.parking_name);
             parkingAddress = (TextView) itemView.findViewById(R.id.parking_address);
-            parkingTime = (TextView) itemView.findViewById(R.id.time);
+            parkingTime = (TextView) itemView.findViewById(R.id.available_slots);
             btnAction = (Button) itemView.findViewById(R.id.action_button);
             placeHolder = (TextView) itemView.findViewById(R.id.amount_trans2);
             ic_trans = (ImageView) itemView.findViewById(R.id.ic_trans);

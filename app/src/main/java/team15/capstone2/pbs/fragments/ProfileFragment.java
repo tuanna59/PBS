@@ -38,6 +38,7 @@ public class ProfileFragment extends Fragment {
     private TextView logout;
     private ImageView ivQR;
     private Dialog qrViewer;
+    private String qrURL;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -68,7 +69,8 @@ public class ProfileFragment extends Fragment {
 
         qrViewer = new Dialog(getActivity(),android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
 
-        Picasso.get().load(R.drawable.qr_test).into(ivQR);
+        qrURL = "http://api.qrserver.com/v1/create-qr-code/?data=2&size=300x300";
+        Picasso.get().load(qrURL).into(ivQR);
 
         setOnClickEvent();
         setupQRview();
@@ -78,7 +80,7 @@ public class ProfileFragment extends Fragment {
         qrViewer.setCancelable(false);
         qrViewer.setContentView(R.layout.qr_view);
         ImageView ivPreview = (ImageView)qrViewer.findViewById(R.id.qr_image);
-        Picasso.get().load(R.drawable.qr_test).into(ivPreview);
+        Picasso.get().load(qrURL).into(ivPreview);
 
         ivPreview.setOnClickListener(new View.OnClickListener() {
             @Override

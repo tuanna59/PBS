@@ -49,12 +49,16 @@
         <item>07:00 03/29/2018</item>
     </array>
     <array name="car_status">
-        <item>Active</item>
-        <item>Finish</item>
+        <item>Pending</item>
+        <item>Checked out</item>
     </array>
     <array name="parking_address">
         <item>3 Quang Trung, Hai Chau, Da Nang</item>
         <item>147 Ong Ich Khiem, Thanh Khe, Da Nang</item>
     </array>
-
+    <array name="deposit_method">
+        <item>Mobile Card</item>
+        <item>ATM</item>
+        <item>Visa/Credit Card</item>
+    </array>
 </resources>

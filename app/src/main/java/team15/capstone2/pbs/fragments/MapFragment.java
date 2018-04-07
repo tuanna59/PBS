@@ -1,19 +1,25 @@
 package team15.capstone2.pbs.fragments;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Camera;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,19 +28,36 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
-import team15.capstone2.pbs.R;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, OnMapReadyCallback {
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+
+import team15.capstone2.pbs.R;
+import team15.capstone2.pbs.actitities.BookingActivity;
+import team15.capstone2.pbs.actitities.BookingDetailActivity;
+import team15.capstone2.pbs.actitities.LoginActivity;
+import team15.capstone2.pbs.adapters.CustomInfoMapAdapter;
+
+public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButtonClickListener,
+        GoogleMap.OnMyLocationClickListener, OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     GoogleMap mGoogleMap;
     MapView mMapView;
     View mView;
 
     public MapFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -90,10 +113,11 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+        //mGoogleMap.setInfoWindowAdapter(new CustomInfoMapAdapter(getActivity()));
         mGoogleMap.setMyLocationEnabled(true);
         mGoogleMap.setOnMyLocationButtonClickListener(this);
         mGoogleMap.setOnMyLocationClickListener(this);
-
+        mGoogleMap.setOnInfoWindowClickListener(this);
     }
 
     @Override
@@ -107,5 +131,11 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
         // Return false so that we don't consume the event and the default behavior still occurs
         // (the camera animates to the user's current position).
         return false;
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Intent intent = new Intent(getContext(), BookingActivity.class);
+        startActivity(intent);
     }
 }
