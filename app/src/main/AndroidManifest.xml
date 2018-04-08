@@ -18,71 +18,87 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".actitities.LoginActivity" android:launchMode="singleInstance">
+
+        <!-- Maps Android Key -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_map_key" />
+        <!-- Maps -->
+
+        <activity android:name=".actitities.LoginActivity" android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".actitities.MainActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
             android:label="@string/app_name" />
-
-        <!-- Maps Android Key -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAd9_CnP8ez-9grN81TqLheNCEmHaiQtts" />
-
-        <!-- Maps -->
 
         <activity
             android:name=".actitities.WalletActivity"
+            android:launchMode="singleTask"
             android:parentActivityName=".actitities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".actitities.MainActivity" />
         </activity>
+
         <activity
             android:name=".actitities.CarsManagerActivity"
+            android:launchMode="singleTask"
             android:parentActivityName=".actitities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".actitities.MainActivity" />
         </activity>
+
         <activity
             android:name=".actitities.HistoryActivity"
+            android:launchMode="singleTask"
             android:parentActivityName=".actitities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".actitities.MainActivity" />
         </activity>
+
         <activity
             android:name=".actitities.AccountActivity"
+            android:launchMode="singleTask"
             android:parentActivityName=".actitities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".actitities.MainActivity" />
         </activity>
+
         <activity
             android:name=".actitities.FeedbackActivity"
+            android:launchMode="singleTask"
             android:parentActivityName=".actitities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".actitities.MainActivity" />
         </activity>
+
         <activity
             android:name=".actitities.RegisterActivity"
+            android:launchMode="singleTask"
             android:label="@string/title_activity_register"
             android:theme="@style/AppTheme" />
+
         <activity android:name=".actitities.BookingActivity"
+            android:launchMode="singleTask"
             android:parentActivityName=".actitities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".actitities.MainActivity" />
         </activity>
+
         <activity android:name=".actitities.BookingDetailActivity"
+            android:launchMode="singleTask"
             android:parentActivityName=".actitities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -29,15 +28,17 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.text.DecimalFormat;
 
 import team15.capstone2.pbs.R;
-import team15.capstone2.pbs.fragments.CarsFragment;
+import team15.capstone2.pbs.models.ParkingLot;
 
 public class BookingActivity extends AppCompatActivity {
 
     private ImageView imageView;
     private Button btnBook;
-    TextView placeDetail, placeLocation;
+    private ParkingLot parkingLot;
+    private TextView txtCapacity, txtPrice, placeLocation, timeUsable;
     ProgressDialog progressDialog;
     int notificationId;
 
@@ -50,14 +51,22 @@ public class BookingActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle("Parking Lot Detail");
         imageView = (ImageView) findViewById(R.id.image);
         btnBook = (Button) findViewById(R.id.btnBook);
-        placeDetail = (TextView) findViewById(R.id.place_detail);
+        txtCapacity = (TextView) findViewById(R.id.txtCapacity);
+        txtPrice = (TextView) findViewById(R.id.txtPrice);
         placeLocation = (TextView) findViewById(R.id.place_location);
+        timeUsable = (TextView) findViewById(R.id.time_usable);
 
-        placeDetail.setText("Parking lot test 1\nPrice: 15.000VND / hour");
-        placeLocation.setText("3 Quang Trung, Da Nang");
+        Intent intent = getIntent();
+        parkingLot = (ParkingLot) intent.getSerializableExtra("PARKINGLOT");
+
+        collapsingToolbar.setTitle(parkingLot.getAddress());
+        txtCapacity.setText("Capacity: " + parkingLot.getNumberOfSlots() + " slots");
+        DecimalFormat formatter = new DecimalFormat("#,### VND/hour");
+        txtPrice.setText("Price: " + formatter.format(parkingLot.getCost()));
+        placeLocation.setText(parkingLot.getAddress());
+        timeUsable.setText("Your balance is enough for " + (int) (251/(parkingLot.getCost()/1000)) + " hour(s)");
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Notice!!!");
@@ -105,7 +114,8 @@ public class BookingActivity extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
             try {
                 String ip = "54.209.171.72";
-                URL url = new URL("http://10.0.2.2:3001/user/addClient");
+                String ip2 = "10.0.2.2";
+                URL url = new URL("http://" + ip2 + ":3001/booking-details/new");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoInput(true);
                 connection.setDoOutput(true);
@@ -116,10 +126,10 @@ public class BookingActivity extends AppCompatActivity {
 
                 //String payload="{\"license_number\": \"123132\", \"type\": 99, \"user_id\": 2}";
 
-                String payload="{\"name\": \"Tuan Nguyen\", \"user_name\": \"tuanna59\", \"password\": \"123456\"," +
-                        " \"email\": \"asdasd@masd.com\"}";
+//                String payload="{\"name\": \"Tuan Nguyen\", \"user_name\": \"tuanna59\", \"password\": \"123456\"," +
+//                        " \"email\": \"asdasd@masd.com\"}";
 
-                //String payload="{\"car_id\": 10}";
+                String payload = "{\"client_id\": 2, \"parkinglot_id\": \"" + parkingLot.getParkinglotId() + "\"}";
 
                 OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
                 writer.write(payload);
@@ -158,7 +168,8 @@ public class BookingActivity extends AppCompatActivity {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, "110")
                 .setSmallIcon(R.drawable.ic_notification_24)
                 .setContentTitle("PBS")
-                .setContentText("Please move to parking lot in 20 minutes. Click to get detail.");
+                .setContentText("Please move to parking lot in 20 minutes. Click to get detail.")
+                .setAutoCancel(true);
 
         Intent resultIntent = new Intent(this, MainActivity.class);
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

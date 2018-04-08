@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/marker_layout_create_note"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:layout_centerInParent="true"
+        tools:ignore="RtlHardcoded,RtlSymmetry">
+
+        <RelativeLayout
+            android:id="@+id/marker_create_note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/ic_marker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="16dp"
+                android:src="@drawable/quest_pin"
+                android:layout_gravity="right"
+                tools:ignore="RtlSymmetry"/>
+
+            <TextView
+                android:id="@+id/txtSlots"
+                android:layout_width="40dp"
+                android:layout_height="42dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="19dp"
+                android:text="11"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@color/bg_light"
+                android:textSize="19dp" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
