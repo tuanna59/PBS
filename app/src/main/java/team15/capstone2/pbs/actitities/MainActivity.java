@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager = (NoSwipePager) findViewById(R.id.viewpager);
         viewPager.setPagingEnabled(false);
         // Save state of fragment between 3 fragment (do not destroy and create new fragment)
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(2);
         pagerAdapter = new BottomBarAdapter(getSupportFragmentManager());
 
         mapFragment = new MapFragment();
