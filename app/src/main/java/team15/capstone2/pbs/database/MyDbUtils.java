@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import team15.capstone2.pbs.models.ParkingLot;
 
 public class MyDbUtils {
+    public final static String ip = "10.0.2.2";   // "10.0.2.2"  "54.209.171.72"
     private static MyDbUtils instance = null;
     private ArrayList<ParkingLot> parkingLots;
 

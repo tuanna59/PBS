@@ -25,6 +25,17 @@
             android:value="@string/google_map_key" />
         <!-- Maps -->
 
+        <!-- Services -->
+        <service android:name=".service.SchedulingService"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="team15.capstone2.pbs.service.SchedulingService" />
+            </intent-filter>
+        </service>
+
+        <!-- Services -->
+
         <activity android:name=".actitities.LoginActivity" android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,6 +1,8 @@
 package team15.capstone2.pbs.fragments;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -52,6 +54,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -64,6 +67,7 @@ import team15.capstone2.pbs.adapters.CustomInfoMapAdapter;
 import team15.capstone2.pbs.database.MyDbUtils;
 import team15.capstone2.pbs.models.ListParkingLot;
 import team15.capstone2.pbs.models.ParkingLot;
+import team15.capstone2.pbs.utils.AlarmUtils;
 
 public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMyLocationClickListener, OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
@@ -202,6 +206,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
 
     class ParkingLotsTask extends AsyncTask<String, Void, ArrayList<ParkingLot>>
     {
+        private int errCode = -1;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -213,6 +218,10 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
         protected void onPostExecute(ArrayList<ParkingLot> parkingLots) {
             super.onPostExecute(parkingLots);
 //            progressDialog.dismiss();
+            if (errCode == 1) {
+                Toast.makeText(getActivity(), "Can't connect to server", Toast.LENGTH_SHORT).show();
+                return;
+            }
             MyDbUtils.getInstance().setParkingLots(parkingLots);
             int i = 0;
             mGoogleMap.clear();
@@ -239,12 +248,12 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
         @Override
         protected ArrayList<ParkingLot> doInBackground(String... strings) {
             try {
-                String ip = "54.209.171.72";
-                String ip2 = "10.0.2.2";
-                URL url = new URL("http://" + ip2 + ":3001/parking-lots/getActiveParkingLots");
+                URL url = new URL("http://" + MyDbUtils.ip + ":3001/parking-lots/getActiveParkingLots");
                 InputStreamReader inputStreamReader = new InputStreamReader(url.openStream(), "UTF-8");
                 ListParkingLot listParkingLot = new Gson().fromJson(inputStreamReader, ListParkingLot.class);
                 return listParkingLot.getData();
+            } catch (ConnectException ex) {
+                errCode = 1;
             } catch (Exception ex) {
                 Log.e("asd", ex.toString());
             }
