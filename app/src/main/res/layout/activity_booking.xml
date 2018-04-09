@@ -329,7 +329,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="bottom"
-        android:background="@color/bottomtab_1">
+        >
         <TextView
             android:id="@+id/time_usable"
             android:layout_width="match_parent"
@@ -339,7 +339,8 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             android:layout_gravity="bottom"
-            tools:text="3 Quang Trung, Da Nang" />
+            tools:text="3 Quang Trung, Da Nang"
+            android:background="@color/bottomtab_1"/>
         <Button
             android:id="@+id/btnBook"
             android:text="Book Now!"

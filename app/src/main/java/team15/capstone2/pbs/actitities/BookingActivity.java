@@ -31,7 +31,9 @@ import java.net.URL;
 import java.text.DecimalFormat;
 
 import team15.capstone2.pbs.R;
+import team15.capstone2.pbs.database.MyDbUtils;
 import team15.capstone2.pbs.models.ParkingLot;
+import team15.capstone2.pbs.utils.AlarmUtils;
 
 public class BookingActivity extends AppCompatActivity {
 
@@ -66,12 +68,22 @@ public class BookingActivity extends AppCompatActivity {
         DecimalFormat formatter = new DecimalFormat("#,### VND/hour");
         txtPrice.setText("Price: " + formatter.format(parkingLot.getCost()));
         placeLocation.setText(parkingLot.getAddress());
-        timeUsable.setText("Your balance is enough for " + (int) (251/(parkingLot.getCost()/1000)) + " hour(s)");
+
+        int usableTime = (int) (251/(parkingLot.getCost()/1000));
+        if (usableTime >= 3) {
+            timeUsable.setVisibility(View.INVISIBLE);
+        } else {
+            timeUsable.setText("Your balance is enough for " + usableTime + " hour(s)");
+        }
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Notice!!!");
         progressDialog.setMessage("Loading");
         progressDialog.setCanceledOnTouchOutside(false);
+
+        if (parkingLot.getNumberOfSlots() == 0) {
+            btnBook.setEnabled(false);
+        }
 
         btnBook.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +115,7 @@ public class BookingActivity extends AppCompatActivity {
             Intent intent = new Intent(BookingActivity.this, BookingDetailActivity.class);
             startActivity(intent);
             createNotification();
+            AlarmUtils.create(BookingActivity.this);
         }
 
         @Override
@@ -113,9 +126,7 @@ public class BookingActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                String ip = "54.209.171.72";
-                String ip2 = "10.0.2.2";
-                URL url = new URL("http://" + ip2 + ":3001/booking-details/new");
+                URL url = new URL("http://" + MyDbUtils.ip + ":3001/booking-details/new");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoInput(true);
                 connection.setDoOutput(true);
