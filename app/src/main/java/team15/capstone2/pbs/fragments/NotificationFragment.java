@@ -3,17 +3,31 @@ package team15.capstone2.pbs.fragments;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+
+import java.io.InputStreamReader;
+import java.net.ConnectException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 
 import team15.capstone2.pbs.R;
+import team15.capstone2.pbs.database.MyDbUtils;
+import team15.capstone2.pbs.models.ListNotification;
+import team15.capstone2.pbs.models.NotificationModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +37,8 @@ public class NotificationFragment extends Fragment {
     private RecyclerView recyclerView;
     private TextView emptyText;
     View inflaterView;
+    private SwipeRefreshLayout swipeContainer;
+    public static NotificationFragment.ContentAdapter adapter;
 
     public NotificationFragment() {
         // Required empty public constructor
@@ -33,16 +49,36 @@ public class NotificationFragment extends Fragment {
         inflaterView = inflater.inflate(R.layout.fragment_notification, container, false);
         recyclerView = (RecyclerView) inflaterView.findViewById(R.id.recycler_view);
 
-        NotificationFragment.ContentAdapter adapter = new NotificationFragment.ContentAdapter(recyclerView.getContext());
+        adapter = new NotificationFragment.ContentAdapter(recyclerView.getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        swipeContainer = (SwipeRefreshLayout) inflaterView.findViewById(R.id.swipeContainer);
+
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                NotificationTask notificationTask = new NotificationTask();
+                notificationTask.execute();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
         emptyText = (TextView) inflaterView.findViewById(R.id.emptyText);
 
-        if (adapter.getItemCount() != 0) {
-            //if data is available, don't show the empty text
+        checkEmptyNotification();
 
+        return inflaterView;
+    }
+
+    private void checkEmptyNotification() {
+        if (adapter.getItemCount() != 0) {
             emptyText.setVisibility(View.INVISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
 
@@ -50,8 +86,6 @@ public class NotificationFragment extends Fragment {
             emptyText.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         }
-
-        return inflaterView;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -65,15 +99,11 @@ public class NotificationFragment extends Fragment {
         }
     }
 
-    public static class ContentAdapter extends RecyclerView.Adapter<NotificationFragment.ViewHolder> {
-        private static final int LENGTH = 3;
-        private final String[] mNotificationText;
-        private final String[] mNotificationTime;
+    public class ContentAdapter extends RecyclerView.Adapter<NotificationFragment.ViewHolder> {
+        MyDbUtils dbUtils = MyDbUtils.getInstance();
 
         public ContentAdapter(Context context) {
             Resources resources = context.getResources();
-            mNotificationText = resources.getStringArray(R.array.notification_info);
-            mNotificationTime = resources.getStringArray(R.array.notification_time);
         }
 
         @Override
@@ -83,13 +113,69 @@ public class NotificationFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.notification_info.setText(mNotificationText[position % mNotificationText.length]);
-            holder.notification_time.setText(mNotificationTime[position % mNotificationTime.length]);
+            holder.notification_info.setText(dbUtils.getNotificationModels().get(position).getText());
+            holder.notification_time.setText(dbUtils.getNotificationModels().get(position).getTime());
         }
 
         @Override
         public int getItemCount() {
-            return LENGTH;
+            return dbUtils.getNotificationModels().size();
+        }
+
+        public void clear() {
+//            dbUtils.getNotificationModels().clear();
+            notifyDataSetChanged();
+        }
+
+        public void addAll() {
+            notifyDataSetChanged();
+            checkEmptyNotification();
+        }
+    }
+
+    class NotificationTask extends AsyncTask<String, Void, ArrayList<NotificationModel>>
+    {
+        private int errCode = -1;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<NotificationModel> bookingDetails) {
+            super.onPostExecute(bookingDetails);
+            if (errCode == 1) {
+                Toast.makeText(getActivity(), "Can't connect to server", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            adapter.clear();
+            MyDbUtils.getInstance().setNotificationModels(bookingDetails);
+            adapter.addAll();
+            swipeContainer.setRefreshing(false);
+            checkEmptyNotification();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected ArrayList<NotificationModel> doInBackground(String... strings) {
+            try {
+                URL url = new URL("http://" + MyDbUtils.ip + ":3001/notifications/getNotificationsByClientId?ClientId="
+                        + MyDbUtils.getInstance().getClientID());
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setConnectTimeout(10000);
+                InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream(), "UTF-8");
+                ListNotification listNotification = new Gson().fromJson(inputStreamReader, ListNotification.class);
+                return listNotification.getData();
+            } catch (ConnectException ex) {
+                errCode = 1;
+            } catch (Exception ex) {
+                Log.e("asd", ex.toString());
+            }
+            return null;
         }
     }
 }

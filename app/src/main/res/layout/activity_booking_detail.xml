@@ -1,25 +1,333 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".actitities.BookingDetailActivity">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Your slot is already to use\nCome to in 30 minutes"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</android.support.constraint.ConstraintLayout>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/bottomtab_3"
+        android:elevation="4dp"
+        app:titleTextColor="@color/bg_light"
+        app:title="Booking Detail"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/my_toolbar">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:paddingBottom="20dp">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_viewParking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardElevation="4dp">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/imgParkingLot"
+                        android:layout_width="match_parent"
+                        android:layout_height="140dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        app:srcCompat="@drawable/parking_lot_image" />
+
+                    <TextView
+                        android:id="@+id/txtParkingName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/imgParkingLot"
+                        android:layout_centerHorizontal="true"
+                        android:textAlignment="center"
+                        android:textSize="20dp"
+                        android:textStyle="bold"
+                        android:text="Parking Lot PL 01" />
+
+                    <TextView
+                        android:id="@+id/txtParkingAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtParkingName"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5dp"
+                        android:textSize="15sp"
+                        android:text="Address" />
+
+                    <TextView
+                        android:id="@+id/txtCapacity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@+id/txtParkingAddress"
+                        android:layout_marginTop="5dp"
+                        android:textSize="15sp"
+                        android:text="Capacity" />
+
+                    <TextView
+                        android:id="@+id/txtPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@+id/txtCapacity"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:textSize="15sp"
+                        android:text="Price" />
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_viewBooking"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="4dp"
+                android:layout_marginTop="5dp"
+                android:layout_below="@+id/card_viewParking">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnSlot1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:textColor="@color/bg_light"
+                        android:text="12" />
+
+                    <Button
+                        android:id="@+id/btnSlot2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/bg_light"
+                        android:text="31" />
+
+                    <Button
+                        android:id="@+id/btnSlot3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:textColor="@color/bg_light"
+                        android:text="6" />
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_viewSuggest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="4dp"
+                android:layout_marginTop="5dp"
+                android:layout_below="@+id/card_viewBooking">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="5dp"
+                        android:textSize="18sp"
+                        android:textColor="@color/teal_dark"
+                        android:text="Suggested Slot"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_marginBottom="5dp"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btnSSlot1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:background="@color/teal_light"
+                            android:minHeight="40dp"
+                            android:minWidth="80dp"
+                            android:textColor="@color/bg_light"
+                            android:text="12" />
+
+                        <Button
+                            android:id="@+id/btnSSlot12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginRight="15dp"
+                            android:textStyle="bold"
+                            android:background="@color/teal_light"
+                            android:minHeight="40dp"
+                            android:minWidth="80dp"
+                            android:textColor="@color/bg_light"
+                            android:text="31" />
+
+                        <Button
+                            android:id="@+id/btnSSlot13"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:background="@color/teal_light"
+                            android:minHeight="40dp"
+                            android:minWidth="80dp"
+                            android:textColor="@color/bg_light"
+                            android:text="6" />
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_view"
+                android:layout_below="@+id/card_viewSuggest"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="14dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="15dp">
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_centerHorizontal="true"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:text="Time Booking" />
+
+                    <TextView
+                        android:id="@+id/txtTimeBooking"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/textView"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="15sp"
+                        android:text="Time Booking" />
+
+                    <TextView
+                        android:id="@+id/txtTitleTimeCheckin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtTimeBooking"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginTop="5dp"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:text="Time Checked In" />
+
+                    <TextView
+                        android:id="@+id/txtTimeCheckin"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtTitleTimeCheckin"
+                        android:textAlignment="center"
+                        android:layout_marginLeft="15dp"
+                        android:textSize="15sp"
+                        android:text="19:00:22 20/01/2017" />
+
+                    <TextView
+                        android:id="@+id/txtTitleTimeCheckout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtTimeBooking"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="30dp"
+                        android:layout_marginTop="5dp"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:text="Time Checked Out" />
+
+                    <TextView
+                        android:id="@+id/txtTimeCheckout"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtTitleTimeCheckout"
+                        android:layout_alignParentRight="true"
+                        android:textAlignment="center"
+                        android:layout_marginRight="15dp"
+                        android:textSize="15sp"
+                        android:text="19:00:50 20/01/2017" />
+
+                    <TextView
+                        android:id="@+id/txtTitleDuration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtTimeCheckin"
+                        android:layout_marginTop="5dp"
+                        android:layout_centerHorizontal="true"
+                        android:textStyle="bold"
+                        android:textSize="15sp"
+                        android:text="Duration" />
+
+                    <TextView
+                        android:id="@+id/txtDuration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtTitleDuration"
+                        android:layout_centerHorizontal="true"
+                        android:textSize="15sp"
+                        android:text="01:00" />
+
+                    <TextView
+                        android:id="@+id/txtTitleCost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtDuration"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginRight="50dp"
+                        android:layout_marginTop="5dp"
+                        android:textStyle="bold"
+                        android:textSize="15sp"
+                        android:text="Cost" />
+
+                    <TextView
+                        android:id="@+id/txtCost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtTitleCost"
+                        android:layout_centerHorizontal="true"
+                        android:textSize="15sp"
+                        android:text="Cost" />
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <ImageView
+                android:id="@+id/imgQR"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_below="@id/card_view"
+                android:visibility="visible"
+                app:srcCompat="@drawable/qr_test" />
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+</RelativeLayout>

@@ -8,21 +8,35 @@ import android.os.Build;
 
 import java.util.Calendar;
 
+import team15.capstone2.pbs.database.MyDbUtils;
 import team15.capstone2.pbs.service.SchedulingService;
 
 public class AlarmUtils {
-    private static int INDEX = 1;
+    private static int INDEX = 10;
 
-    public static void create(Context context) {
+    public static void create(Context context, int type) {
+        int time = 100;
+        switch (type) {
+            case 1:
+                time = 15;
+                break;
+            case 2:
+                time = 4;
+                break;
+            default:
+                time = type * 60 - 59;
+                break;
+        }
+
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, SchedulingService.class);
-        for (int i = 0; i < 2; i++) {
-            intent.putExtra("type", INDEX);
+        for (int i = 0; i < 1; i++) {
+            intent.putExtra("type", type);
             PendingIntent pendingIntent =
-                    PendingIntent.getService(context, INDEX, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            INDEX++;
+                    PendingIntent.getService(context, type, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            INDEX+=10;
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.MINUTE, INDEX);
+            calendar.add(Calendar.MINUTE, time);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 alarmManager
                         .setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);

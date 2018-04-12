@@ -65,11 +65,6 @@
                         android:text="Cars Manager" />
 
                     <TextView
-                        android:id="@+id/txtHistory"
-                        style="@style/textView_profile_style"
-                        android:text="History" />
-
-                    <TextView
                         android:id="@+id/txtWallet"
                         style="@style/textView_profile_style"
                         android:text="Wallet" />

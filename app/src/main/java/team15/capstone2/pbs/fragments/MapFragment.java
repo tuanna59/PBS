@@ -1,25 +1,21 @@
 package team15.capstone2.pbs.fragments;
 
 import android.Manifest;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Camera;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -36,7 +32,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -44,16 +39,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -61,23 +51,22 @@ import java.util.ArrayList;
 
 import team15.capstone2.pbs.R;
 import team15.capstone2.pbs.actitities.BookingActivity;
-import team15.capstone2.pbs.actitities.BookingDetailActivity;
-import team15.capstone2.pbs.actitities.LoginActivity;
+import team15.capstone2.pbs.actitities.MainActivity;
 import team15.capstone2.pbs.adapters.CustomInfoMapAdapter;
 import team15.capstone2.pbs.database.MyDbUtils;
 import team15.capstone2.pbs.models.ListParkingLot;
+import team15.capstone2.pbs.models.ListPaymentDetail;
 import team15.capstone2.pbs.models.ParkingLot;
-import team15.capstone2.pbs.utils.AlarmUtils;
+import team15.capstone2.pbs.models.PaymentDetail;
 
 public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMyLocationClickListener, OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
-    Button btnRefresh;
-    ProgressDialog progressDialog;
-    GoogleMap mGoogleMap;
-    MapView mMapView;
-    View mView;
-//    ArrayList<ParkingLot> mParkingLots;
+    private FloatingActionButton fab;
+    private ProgressDialog progressDialog;
+    private GoogleMap mGoogleMap;
+    private MapView mMapView;
+    private View mView;
 
     public MapFragment() {
     }
@@ -104,10 +93,10 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
         progressDialog.setMessage("Loading");
         progressDialog.setCanceledOnTouchOutside(false);
 
-        btnRefresh = (Button) mView.findViewById(R.id.btnRefresh);
-        btnRefresh.setOnClickListener(new View.OnClickListener() {
+        fab = (FloatingActionButton) mView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 loadMarker();
             }
         });
@@ -133,8 +122,6 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
 
         mGoogleMap = googleMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
-
 
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -169,12 +156,16 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
 
     @Override
     public void onInfoWindowClick(Marker marker) {
+        BalanceTask balanceTask = new BalanceTask();
+        balanceTask.execute();
         Intent intent = new Intent(getContext(), BookingActivity.class);
         intent.putExtra("PARKINGLOT", MyDbUtils.getInstance().getParkingLots().get((int) marker.getTag()));
         startActivity(intent);
     }
 
     private Bitmap getMarkerBitmapFromView(int slots) {
+        if (getActivity() == null)
+            return Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
         View customMarkerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.item_marker_custom, null);
         TextView txtSlots = (TextView) customMarkerView.findViewById(R.id.txtSlots);
         ImageView mImageView = (ImageView) customMarkerView.findViewById(R.id.ic_marker);
@@ -182,11 +173,11 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
         Drawable mIcon= ContextCompat.getDrawable(getActivity(), R.drawable.quest_pin);
         int color = R.color.bottomtab_1;
         if (slots > 20) {
-            color = R.color.bottomtab_3;
+            color = R.color.light_green_dark;
         } else if (slots > 10) {
-            color = R.color.bottomtab_0;
+            color = R.color.lime;
         } else {
-            color = R.color.bottomtab_1;
+            color = R.color.warning;
         }
         mIcon.setColorFilter(ContextCompat.getColor(getActivity(), color), PorterDuff.Mode.MULTIPLY);
         mImageView.setImageDrawable(mIcon);
@@ -225,6 +216,8 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
             MyDbUtils.getInstance().setParkingLots(parkingLots);
             int i = 0;
             mGoogleMap.clear();
+            if (parkingLots == null)
+                return;
             for (ParkingLot parkingLot : parkingLots) {
                Marker maker = mGoogleMap.addMarker(new MarkerOptions()
                         .position(new LatLng(parkingLot.getLatitude(), parkingLot.getLongitude()))
@@ -256,6 +249,39 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
                 errCode = 1;
             } catch (Exception ex) {
                 Log.e("asd", ex.toString());
+            }
+            return null;
+        }
+    }
+
+    class BalanceTask extends AsyncTask<String, Void, Void>
+    {
+        @Override
+        protected Void doInBackground(String... strings) {
+            try {
+                URL url = new URL("http://" + MyDbUtils.ip + ":3001/transaction/getBalanceByClientId?ClientId="
+                        + MyDbUtils.getInstance().getClientID());
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setConnectTimeout(10000);
+                InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream(), "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder builder = new StringBuilder();
+                String line = bufferedReader.readLine();
+                while (line != null) {
+                    builder.append(line);
+                    line = bufferedReader.readLine();
+                }
+
+                JSONObject jsonArray = new JSONObject(builder.toString());
+                if (jsonArray.getJSONArray("data").getJSONObject(0).has("balance")) {
+                    double balance = jsonArray.getJSONArray("data").getJSONObject(0).getDouble("balance");
+                    MyDbUtils.getInstance().setBalance(balance);
+                }
+                connection.disconnect();
+
+            } catch (Exception ex) {
+                Log.e("ERR", ex.toString());
             }
             return null;
         }

@@ -3,29 +3,25 @@ package team15.capstone2.pbs.fragments;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import team15.capstone2.pbs.R;
 import team15.capstone2.pbs.actitities.AccountActivity;
 import team15.capstone2.pbs.actitities.CarsManagerActivity;
 import team15.capstone2.pbs.actitities.FeedbackActivity;
-import team15.capstone2.pbs.actitities.HistoryActivity;
 import team15.capstone2.pbs.actitities.LoginActivity;
 import team15.capstone2.pbs.actitities.WalletActivity;
+import team15.capstone2.pbs.database.MyDbUtils;
 
 
 public class ProfileFragment extends Fragment {
@@ -34,7 +30,6 @@ public class ProfileFragment extends Fragment {
     private TextView carsManager;
     private TextView feedback;
     private TextView account;
-    private TextView history;
     private TextView logout;
     private ImageView ivQR;
     private Dialog qrViewer;
@@ -63,13 +58,12 @@ public class ProfileFragment extends Fragment {
         carsManager = (TextView) view.findViewById(R.id.txtCarsManager);
         account = (TextView) view.findViewById(R.id.txtAccount);
         feedback = (TextView) view.findViewById(R.id.txtFeedback);
-        history = (TextView) view.findViewById(R.id.txtHistory);
         logout = (TextView) view.findViewById(R.id.txtLogout);
         ivQR = (ImageView) view.findViewById(R.id.qr_view);
 
         qrViewer = new Dialog(getActivity(),android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
 
-        qrURL = "http://api.qrserver.com/v1/create-qr-code/?data=2&size=300x300";
+        qrURL = "http://api.qrserver.com/v1/create-qr-code/?data=" + MyDbUtils.getInstance().getClientID() + "&size=300x300";
         Picasso.get().load(qrURL).into(ivQR);
 
         setOnClickEvent();
@@ -130,17 +124,14 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        history.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), HistoryActivity.class);
-                startActivity(intent);
-            }
-        });
-
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences preferences = getActivity().getSharedPreferences("config", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.remove("ClientID");
+                editor.commit();
+
                 Intent intent = new Intent(getContext(), LoginActivity.class);
                 startActivity(intent);
                 getActivity().finish();

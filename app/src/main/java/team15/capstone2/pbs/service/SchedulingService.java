@@ -7,16 +7,39 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.ConnectException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import team15.capstone2.pbs.R;
+import team15.capstone2.pbs.actitities.BookingActivity;
 import team15.capstone2.pbs.actitities.MainActivity;
+import team15.capstone2.pbs.database.MyDbUtils;
+import team15.capstone2.pbs.fragments.CarsFragment;
+import team15.capstone2.pbs.fragments.NotificationFragment;
+import team15.capstone2.pbs.models.ListBookingDetail;
+import team15.capstone2.pbs.models.ListNotification;
+import team15.capstone2.pbs.models.ListParkingLot;
+import team15.capstone2.pbs.utils.AlarmUtils;
 
 public class SchedulingService extends IntentService {
     private static final int TIME_VIBRATE = 1000;
+    int index;
 
     public SchedulingService() {
         super(SchedulingService.class.getSimpleName());
@@ -24,7 +47,55 @@ public class SchedulingService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        int index = intent.getIntExtra("type", 0);
+        DataTask data = new DataTask();
+        data.execute();
+        index = intent.getIntExtra("type", 0);
+
+    }
+
+    private void createNotification() {
+        switch (index) {
+            case 1:
+                createNotificationType1();
+                break;
+            case 2:
+                createNotificationType2();
+                break;
+            default:
+                createNotificationType3();
+                break;
+        }
+    }
+
+    private void createNotificationType1() {
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        notificationIntent.putExtra("page", 1);
+        notificationIntent
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        int requestID = (int) System.currentTimeMillis();
+        PendingIntent contentIntent = PendingIntent
+                .getActivity(this, requestID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_notification_24)
+                        .setContentTitle(getString(R.string.app_name))
+                        .setContentText("5 mins before cancel.")
+                        .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
+                        .setDefaults(Notification.DEFAULT_SOUND)
+                        .setAutoCancel(true)
+                        .setPriority(6)
+                        .setVibrate(new long[]{TIME_VIBRATE, TIME_VIBRATE, TIME_VIBRATE, TIME_VIBRATE,
+                                TIME_VIBRATE})
+                        .setContentIntent(contentIntent);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(index, builder.build());
+
+        AlarmUtils.create(getApplicationContext(), 2);
+    }
+
+    private void createNotificationType2() {
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent
                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -33,9 +104,9 @@ public class SchedulingService extends IntentService {
                 .getActivity(this, requestID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_notification_24)
                         .setContentTitle(getString(R.string.app_name))
-                        .setContentText("index = " + index)
+                        .setContentText("Your booking was canceled.")
                         .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                         .setDefaults(Notification.DEFAULT_SOUND)
                         .setAutoCancel(true)
@@ -43,8 +114,60 @@ public class SchedulingService extends IntentService {
                         .setVibrate(new long[]{TIME_VIBRATE, TIME_VIBRATE, TIME_VIBRATE, TIME_VIBRATE,
                                 TIME_VIBRATE})
                         .setContentIntent(contentIntent);
+
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(index, builder.build());
+    }
+
+    private void createNotificationType3() {
+
+    }
+
+    class DataTask extends AsyncTask<String, Void, Void>
+    {
+        private int errCode = -1;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (errCode == 1) {
+                createNotification();
+                return;
+            }
+            if (MyDbUtils.getInstance().getBookingDetails().get(0).getStatus() != 0)
+                return;
+            createNotification();
+
+//            if (MyDbUtils.getInstance().getBookingDetails().get(0).getStatus() == 1)
+//                createNotificationType3();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            try {
+                SharedPreferences preferences = getSharedPreferences("config", MODE_PRIVATE);
+                int clientID = preferences.getInt("ClientID", 0);
+                URL url = new URL("http://" + MyDbUtils.ip + ":3001/booking-details/getBookingByClientId?ClientId=" + clientID);
+                InputStreamReader inputStreamReader = new InputStreamReader(url.openStream(), "UTF-8");
+                ListBookingDetail listBookingDetail = new Gson().fromJson(inputStreamReader, ListBookingDetail.class);
+                MyDbUtils.getInstance().setBookingDetails(listBookingDetail.getData());
+
+            } catch (ConnectException ex) {
+                errCode = 1;
+            } catch (Exception ex) {
+                Log.e("asd", ex.toString());
+            }
+            return null;
+        }
     }
 }

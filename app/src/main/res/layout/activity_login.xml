@@ -34,13 +34,13 @@
             android:text="Parking Booking System" />
 
         <EditText
-            android:id="@+id/editText6"
+            android:id="@+id/txtUsername"
             style="@style/editText_style"
             android:hint="Username"
             android:inputType="textEmailAddress" />
 
         <EditText
-            android:id="@+id/editText7"
+            android:id="@+id/txtPassword"
             style="@style/editText_style"
             android:hint="Password"
             android:inputType="textPassword" />
