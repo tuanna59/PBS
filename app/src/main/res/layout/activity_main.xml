@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <team15.capstone2.pbs.viewholders.NoSwipePager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
@@ -18,6 +19,7 @@
     <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
+        android:layout_below="@+id/viewpager"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"/>
 

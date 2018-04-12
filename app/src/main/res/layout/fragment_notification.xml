@@ -1,22 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.NotificationFragment">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/bottomtab_1"
+        android:elevation="4dp"
+        app:titleTextColor="@color/bg_light"
+        app:title="Notification"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"/>
 
     <TextView
         android:id="@+id/emptyText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/my_toolbar"
         android:layout_centerInParent="true"
         android:gravity="center"
         android:text="No notification"
+        android:textSize="20sp"
         android:visibility="visible"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_below="@+id/my_toolbar"
         android:id="@+id/swipeContainer"
+        android:layout_marginBottom="50dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -27,9 +42,9 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:paddingBottom="10dp"
-            android:paddingTop="10dp"
+            android:paddingTop="5dp"
             android:scrollbars="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
-</FrameLayout>
+</RelativeLayout>

@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -32,6 +33,7 @@ import java.text.DecimalFormat;
 
 import team15.capstone2.pbs.R;
 import team15.capstone2.pbs.database.MyDbUtils;
+import team15.capstone2.pbs.models.BookingDetail;
 import team15.capstone2.pbs.models.ParkingLot;
 import team15.capstone2.pbs.utils.AlarmUtils;
 
@@ -69,11 +71,14 @@ public class BookingActivity extends AppCompatActivity {
         txtPrice.setText("Price: " + formatter.format(parkingLot.getCost()));
         placeLocation.setText(parkingLot.getAddress());
 
-        int usableTime = (int) (251/(parkingLot.getCost()/1000));
+        int usableTime = (int) (MyDbUtils.getInstance().getBalance()/(parkingLot.getCost()));
         if (usableTime >= 3) {
             timeUsable.setVisibility(View.INVISIBLE);
-        } else {
+        } else if (usableTime >= 1){
             timeUsable.setText("Your balance is enough for " + usableTime + " hour(s)");
+        } else {
+            timeUsable.setText("You don't have enough money to book this slot");
+            btnBook.setEnabled(false);
         }
 
         progressDialog = new ProgressDialog(this);
@@ -112,10 +117,12 @@ public class BookingActivity extends AppCompatActivity {
             if (!isSuccess) {
                 return;
             }
-            Intent intent = new Intent(BookingActivity.this, BookingDetailActivity.class);
+            Intent intent = new Intent(BookingActivity.this, BookingSuccessActivity.class);
             startActivity(intent);
             createNotification();
-            AlarmUtils.create(BookingActivity.this);
+            AlarmUtils.create(BookingActivity.this, 1);
+//            AlarmUtils.create(BookingActivity.this, (int) (MyDbUtils.getInstance().getBalance()/(parkingLot.getCost())));
+            finish();
         }
 
         @Override
@@ -140,7 +147,8 @@ public class BookingActivity extends AppCompatActivity {
 //                String payload="{\"name\": \"Tuan Nguyen\", \"user_name\": \"tuanna59\", \"password\": \"123456\"," +
 //                        " \"email\": \"asdasd@masd.com\"}";
 
-                String payload = "{\"client_id\": 2, \"parkinglot_id\": \"" + parkingLot.getParkinglotId() + "\"}";
+                String payload = "{\"client_id\": " + MyDbUtils.getInstance().getClientID()
+                        + ", \"parkinglot_id\": \"" + parkingLot.getParkinglotId() + "\"}";
 
                 OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
                 writer.write(payload);

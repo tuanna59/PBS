@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import java.lang.reflect.Array;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import team15.capstone2.pbs.R;
+
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +28,7 @@ public class DepositFragment extends Fragment {
     Spinner spinnerDepositMethod;
     ArrayList<String> listMethod;
     ArrayAdapter<String> adapterMedthod;
+    LinearLayout layout;
 
     public DepositFragment() {
         // Required empty public constructor
@@ -33,6 +37,7 @@ public class DepositFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        layout = (LinearLayout) getView().findViewById(R.id.parentLayout);
         spinnerDepositMethod = (Spinner) getView().findViewById(R.id.spinner);
         listMethod = new ArrayList<String>();
         listMethod.addAll(Arrays.asList(getResources().getStringArray(R.array.deposit_method)));

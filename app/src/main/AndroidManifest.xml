@@ -25,10 +25,12 @@
             android:value="@string/google_map_key" />
         <!-- Maps -->
 
+
         <!-- Services -->
-        <service android:name=".service.SchedulingService"
+        <service
+            android:name=".service.SchedulingService"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="team15.capstone2.pbs.service.SchedulingService" />
             </intent-filter>
@@ -36,19 +38,20 @@
 
         <!-- Services -->
 
-        <activity android:name=".actitities.LoginActivity" android:launchMode="singleTask">
+        <activity
+            android:name=".actitities.LoginActivity"
+            android:launchMode="singleTask">
+        </activity>
+        <activity
+            android:name=".actitities.MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".actitities.MainActivity"
-            android:launchMode="singleTask"
-            android:label="@string/app_name" />
-
         <activity
             android:name=".actitities.WalletActivity"
             android:launchMode="singleTask"
@@ -57,7 +60,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".actitities.MainActivity" />
         </activity>
-
         <activity
             android:name=".actitities.CarsManagerActivity"
             android:launchMode="singleTask"
@@ -66,16 +68,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".actitities.MainActivity" />
         </activity>
-
-        <activity
-            android:name=".actitities.HistoryActivity"
-            android:launchMode="singleTask"
-            android:parentActivityName=".actitities.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".actitities.MainActivity" />
-        </activity>
-
         <activity
             android:name=".actitities.AccountActivity"
             android:launchMode="singleTask"
@@ -84,7 +76,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".actitities.MainActivity" />
         </activity>
-
         <activity
             android:name=".actitities.FeedbackActivity"
             android:launchMode="singleTask"
@@ -93,27 +84,30 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".actitities.MainActivity" />
         </activity>
-
         <activity
             android:name=".actitities.RegisterActivity"
-            android:launchMode="singleTask"
             android:label="@string/title_activity_register"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme" />
-
-        <activity android:name=".actitities.BookingActivity"
+        <activity
+            android:name=".actitities.BookingActivity"
             android:launchMode="singleTask"
             android:parentActivityName=".actitities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".actitities.MainActivity" />
         </activity>
-
-        <activity android:name=".actitities.BookingDetailActivity"
+        <activity
+            android:name=".actitities.BookingSuccessActivity"
             android:launchMode="singleTask"
             android:parentActivityName=".actitities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".actitities.MainActivity" />
+        </activity>
+        <activity android:name=".actitities.BookingDetailActivity"
+            android:launchMode="singleTask">
+
         </activity>
     </application>
 

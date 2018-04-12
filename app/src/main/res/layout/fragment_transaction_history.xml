@@ -15,13 +15,25 @@
 
     <TextView
         android:id="@+id/type_trans"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/ic_trans"
-        tools:text="Add (+)"
+        android:paddingLeft="10dp"
+        tools:text="Deposit (+)"
         android:textAppearance="?attr/textAppearanceListItem"
         android:textSize="16dp" />
+
+    <TextView
+        android:id="@+id/txtTransDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentRight="true"
+        android:gravity="right"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:textSize="16dp"
+        tools:text="12:12 04/21/2018" />
 
     <TextView
         android:id="@+id/amount_trans"
@@ -30,11 +42,9 @@
         android:layout_below="@+id/type_trans"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/ic_trans"
+        android:paddingLeft="10dp"
         android:textColor="@color/cardview_dark_background"
-        android:ellipsize="end"
-        android:singleLine="true"
-        tools:text="20.000 VND"
-        android:textAppearance="?attr/textAppearanceListItem"
-        android:textSize="14dp" />
+        android:textSize="14dp"
+        tools:text="20.000 VND" />
 
 </RelativeLayout>
