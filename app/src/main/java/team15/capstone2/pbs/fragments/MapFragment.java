@@ -19,10 +19,16 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPropertyAnimatorListener;
+import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.OvershootInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -97,6 +103,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                rotate();
                 loadMarker();
             }
         });
@@ -108,12 +115,39 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
             mMapView.getMapAsync(this);
         }
 
-        loadMarker();
+        ParkingLotsTask parkingLotsTask = new ParkingLotsTask();
+        parkingLotsTask.execute("1");
+    }
+
+    private void rotate() {
+        ViewCompat.animate(fab)
+                .alpha(1)
+                .scaleX(1)
+                .scaleY(1)
+                .setDuration(300)
+                .setInterpolator(new OvershootInterpolator())
+                .setListener(new ViewPropertyAnimatorListener() {
+                    @Override
+                    public void onAnimationStart(View view) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(View view) {
+                        ViewCompat.animate(fab).setInterpolator(new LinearOutSlowInInterpolator()).setListener(null).start();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(View view) {
+
+                    }
+                })
+                .start();
     }
 
     private void loadMarker() {
         ParkingLotsTask parkingLotsTask = new ParkingLotsTask();
-        parkingLotsTask.execute();
+        parkingLotsTask.execute("0");
     }
 
     @Override
@@ -198,6 +232,8 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
     class ParkingLotsTask extends AsyncTask<String, Void, ArrayList<ParkingLot>>
     {
         private int errCode = -1;
+        private boolean isMoveCamera = false;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -227,10 +263,12 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
                 maker.setTag(i++);
             }
 
-            CameraPosition ParkingLot = CameraPosition.builder().target(new LatLng(16.067847,108.214065))
-                    .zoom(14).bearing(0).tilt(45).build();
+            if (isMoveCamera) {
+                CameraPosition ParkingLot = CameraPosition.builder().target(new LatLng(16.067847, 108.214065))
+                        .zoom(14).bearing(0).tilt(45).build();
 
-            mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(ParkingLot));
+                mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(ParkingLot));
+            }
         }
 
         @Override
@@ -240,6 +278,11 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
 
         @Override
         protected ArrayList<ParkingLot> doInBackground(String... strings) {
+            if (strings[0].equals("1")) {
+                isMoveCamera = true;
+            } else {
+                isMoveCamera = false;
+            }
             try {
                 URL url = new URL("http://" + MyDbUtils.ip + ":3001/parking-lots/getActiveParkingLots");
                 InputStreamReader inputStreamReader = new InputStreamReader(url.openStream(), "UTF-8");
@@ -291,5 +334,6 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
     public void onResume() {
         super.onResume();
         loadMarker();
+//        Toast.makeText(getActivity(),"Frag map resume", Toast.LENGTH_SHORT).show();
     }
 }

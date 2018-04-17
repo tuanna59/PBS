@@ -24,8 +24,8 @@ import team15.capstone2.pbs.models.ParkingLot;
 import team15.capstone2.pbs.models.PaymentDetail;
 
 public class MyDbUtils {
-    public final static String ip = "10.0.2.2";
-//    public final static String ip = "54.209.171.72";
+//    public final static String ip = "10.0.2.2";
+    public final static String ip = "54.209.171.72";
     private static MyDbUtils instance = null;
     private ArrayList<ParkingLot> parkingLots;
     private ArrayList<BookingDetail> bookingDetails;

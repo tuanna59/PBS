@@ -81,9 +81,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
                 if (!wasSelected) {
+                    if (position == 0) {
+                        mapFragment.onResume();
+                    }
                     if (position != 3 && position != 0) {
+//                        Toast.makeText(MainActivity.this, position+"", Toast.LENGTH_SHORT).show();
                         DataTask dataTask = new DataTask();
-                        dataTask.execute();
+                        dataTask.execute(position + "");
                     }
                     viewPager.setCurrentItem(position);
                 }
@@ -114,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         pagerAdapter = new BottomBarAdapter(getSupportFragmentManager());
 
         DataTask dataTask = new DataTask();
-        dataTask.execute();
+        dataTask.execute("1234");
 
         mapFragment = new MapFragment();
         carsFragment = new CarsFragment();
@@ -167,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            if (mapFragment == null) {
+            if (NotificationFragment.adapter == null || CarsFragment.adapter == null) {
 
             } else {
                 NotificationFragment.adapter.addAll();
@@ -184,42 +188,55 @@ public class MainActivity extends AppCompatActivity {
         protected Void doInBackground(String... strings) {
             try {
                 int clientID = MyDbUtils.getInstance().getClientID();
-                URL url = new URL("http://" + MyDbUtils.ip + ":3001/booking-details/getBookingByClientId?ClientId=" + clientID);
-                InputStreamReader inputStreamReader = new InputStreamReader(url.openStream(), "UTF-8");
-                ListBookingDetail listBookingDetail = new Gson().fromJson(inputStreamReader, ListBookingDetail.class);
-                MyDbUtils.getInstance().setBookingDetails(listBookingDetail.getData());
-
-                url = new URL("http://" + MyDbUtils.ip + ":3001/parking-lots/getActiveParkingLots");
-                inputStreamReader = new InputStreamReader(url.openStream(), "UTF-8");
-                ListParkingLot listParkingLot = new Gson().fromJson(inputStreamReader, ListParkingLot.class);
-                MyDbUtils.getInstance().setParkingLots(listParkingLot.getData());
-
-                url = new URL("http://" + MyDbUtils.ip + ":3001/notifications/getNotificationsByClientId?ClientId=" + clientID);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setConnectTimeout(10000);
-                inputStreamReader = new InputStreamReader(connection.getInputStream(), "UTF-8");
-                ListNotification listNotification = new Gson().fromJson(inputStreamReader, ListNotification.class);
-                MyDbUtils.getInstance().setNotificationModels(listNotification.getData());
-
-                url = new URL("http://" + MyDbUtils.ip + ":3001/transaction/getBalanceByClientId?ClientId=" + clientID);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setConnectTimeout(10000);
-                inputStreamReader = new InputStreamReader(connection.getInputStream(), "UTF-8");
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-                StringBuilder builder = new StringBuilder();
-                String line = bufferedReader.readLine();
-                while (line != null) {
-                    builder.append(line);
-                    line = bufferedReader.readLine();
+                if (MyDbUtils.getInstance().getClientID() == 0) {
+                    SharedPreferences preferences = getSharedPreferences("config", MODE_PRIVATE);
+                    clientID = preferences.getInt("ClientID", 0);
+                    MyDbUtils.getInstance().setClientID(clientID);
                 }
+                URL url;
+                InputStreamReader inputStreamReader;
+                HttpURLConnection connection;
 
-                JSONObject jsonArray = new JSONObject(builder.toString());
-                if (jsonArray.getJSONArray("data").getJSONObject(0).has("balance")) {
-                    double balance = jsonArray.getJSONArray("data").getJSONObject(0).getDouble("balance");
-                    MyDbUtils.getInstance().setBalance(balance);
+                if (strings[0].contains("1")) {
+                    url = new URL("http://" + MyDbUtils.ip + ":3001/booking-details/getBookingByClientId?ClientId=" + clientID);
+                    inputStreamReader = new InputStreamReader(url.openStream(), "UTF-8");
+                    ListBookingDetail listBookingDetail = new Gson().fromJson(inputStreamReader, ListBookingDetail.class);
+                    MyDbUtils.getInstance().setBookingDetails(listBookingDetail.getData());
                 }
+                if (strings[0].contains("0")) {
+                    url = new URL("http://" + MyDbUtils.ip + ":3001/parking-lots/getActiveParkingLots");
+                    inputStreamReader = new InputStreamReader(url.openStream(), "UTF-8");
+                    ListParkingLot listParkingLot = new Gson().fromJson(inputStreamReader, ListParkingLot.class);
+                    MyDbUtils.getInstance().setParkingLots(listParkingLot.getData());
+                }
+                if (strings[0].contains("2")) {
+                    url = new URL("http://" + MyDbUtils.ip + ":3001/notifications/getNotificationsByClientId?ClientId=" + clientID);
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.setConnectTimeout(10000);
+                    inputStreamReader = new InputStreamReader(connection.getInputStream(), "UTF-8");
+                    ListNotification listNotification = new Gson().fromJson(inputStreamReader, ListNotification.class);
+                    MyDbUtils.getInstance().setNotificationModels(listNotification.getData());
+                }
+                if (strings[0].contains("0") || strings[0].contains("3")) {
+                    url = new URL("http://" + MyDbUtils.ip + ":3001/transaction/getBalanceByClientId?ClientId=" + clientID);
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.setConnectTimeout(10000);
+                    inputStreamReader = new InputStreamReader(connection.getInputStream(), "UTF-8");
+                    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
+                    StringBuilder builder = new StringBuilder();
+                    String line = bufferedReader.readLine();
+                    while (line != null) {
+                        builder.append(line);
+                        line = bufferedReader.readLine();
+                    }
+
+                    JSONObject jsonArray = new JSONObject(builder.toString());
+                    if (jsonArray.getJSONArray("data").getJSONObject(0).has("balance")) {
+                        double balance = jsonArray.getJSONArray("data").getJSONObject(0).getDouble("balance");
+                        MyDbUtils.getInstance().setBalance(balance);
+                    }
+                }
             } catch (ConnectException ex) {
                 errCode = 1;
             } catch (Exception ex) {
@@ -240,7 +257,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         DataTask task = new DataTask();
-        task.execute();
+        task.execute(bottomNavigation.getCurrentItem() + "");
+//        Toast.makeText(this, bottomNavigation.getCurrentItem()+ "", Toast.LENGTH_SHORT).show();
+
 //        int page = getIntent().getIntExtra("page", 0);
 //        viewPager.setCurrentItem(page);
 //        viewPager.;

@@ -18,10 +18,10 @@ public class AlarmUtils {
         int time = 100;
         switch (type) {
             case 1:
-                time = 15;
+                time = 15 * 60;
                 break;
             case 2:
-                time = 4;
+                time = 4 * 60 + 30;
                 break;
             default:
                 time = type * 60 - 59;
@@ -36,7 +36,7 @@ public class AlarmUtils {
                     PendingIntent.getService(context, type, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             INDEX+=10;
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.MINUTE, time);
+            calendar.add(Calendar.SECOND, time);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 alarmManager
                         .setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);

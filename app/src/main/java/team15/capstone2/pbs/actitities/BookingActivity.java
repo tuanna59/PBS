@@ -2,23 +2,30 @@ package team15.capstone2.pbs.actitities;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -34,6 +41,7 @@ import java.text.DecimalFormat;
 import team15.capstone2.pbs.R;
 import team15.capstone2.pbs.database.MyDbUtils;
 import team15.capstone2.pbs.models.BookingDetail;
+import team15.capstone2.pbs.models.ListBookingDetail;
 import team15.capstone2.pbs.models.ParkingLot;
 import team15.capstone2.pbs.utils.AlarmUtils;
 
@@ -43,7 +51,7 @@ public class BookingActivity extends AppCompatActivity {
     private Button btnBook;
     private ParkingLot parkingLot;
     private TextView txtCapacity, txtPrice, placeLocation, timeUsable;
-    ProgressDialog progressDialog;
+    ProgressBar progressBar;
     int notificationId;
 
     @Override
@@ -52,7 +60,11 @@ public class BookingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_booking);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        final Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_material);
+        upArrow.setColorFilter(getResources().getColor(R.color.bg_light), PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         imageView = (ImageView) findViewById(R.id.image);
@@ -81,13 +93,18 @@ public class BookingActivity extends AppCompatActivity {
             btnBook.setEnabled(false);
         }
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Notice!!!");
-        progressDialog.setMessage("Loading");
-        progressDialog.setCanceledOnTouchOutside(false);
+        RelativeLayout layout = findViewById(R.id.layout);
+        progressBar = new ProgressBar(BookingActivity.this,null,android.R.attr.progressBarStyleLarge);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(100,100);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        layout.addView(progressBar,params);
+        progressBar.setVisibility(View.GONE);
 
         if (parkingLot.getNumberOfSlots() == 0) {
             btnBook.setEnabled(false);
+            btnBook.setBackgroundColor(ContextCompat.getColor(this, R.color.blue_grey_dark));
+            timeUsable.setVisibility(View.VISIBLE);
+            timeUsable.setText("Out of slots");
         }
 
         btnBook.setOnClickListener(new View.OnClickListener() {
@@ -107,13 +124,20 @@ public class BookingActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog.show();
+//            progressDialog.show();
+            progressBar.setVisibility(View.VISIBLE);  //To show ProgressBar
+            // To disable the user interaction
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            progressDialog.dismiss();
+//            progressDialog.dismiss();
+            progressBar.setVisibility(View.GONE);     // To Hide ProgressBar
+            // To get user interaction back
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             if (!isSuccess) {
                 return;
             }
@@ -168,6 +192,14 @@ public class BookingActivity extends AppCompatActivity {
                 if (jsonObject.has("isSuccess")) {
                     isSuccess = jsonObject.getBoolean("isSuccess");
                 }
+
+                SharedPreferences preferences = getSharedPreferences("config", MODE_PRIVATE);
+                int clientID = preferences.getInt("ClientID", 0);
+                url = new URL("http://" + MyDbUtils.ip + ":3001/booking-details/getBookingByClientId?ClientId=" + clientID);
+                inputStreamReader = new InputStreamReader(url.openStream(), "UTF-8");
+                ListBookingDetail listBookingDetail = new Gson().fromJson(inputStreamReader, ListBookingDetail.class);
+                MyDbUtils.getInstance().setBookingDetails(listBookingDetail.getData());
+
                 connection.disconnect();
             }
             catch (SocketTimeoutException ex)
@@ -185,12 +217,14 @@ public class BookingActivity extends AppCompatActivity {
 
     private void createNotification() {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, "110")
-                .setSmallIcon(R.drawable.ic_notification_24)
-                .setContentTitle("PBS")
+                .setSmallIcon(R.drawable.ic_alarm_black_24dp)
+                .setContentTitle("Parking Booking System")
                 .setContentText("Please move to parking lot in 20 minutes. Click to get detail.")
                 .setAutoCancel(true);
 
-        Intent resultIntent = new Intent(this, MainActivity.class);
+        Intent resultIntent = new Intent(this, BookingDetailActivity.class);
+        resultIntent.putExtra("BOOKINGDETAIL", MyDbUtils.getInstance().getBookingDetails().get(0));
+        resultIntent.putExtra("CLIENTID", MyDbUtils.getInstance().getClientID());
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         PendingIntent resultPendingIntent = PendingIntent.getActivities(this, 0,

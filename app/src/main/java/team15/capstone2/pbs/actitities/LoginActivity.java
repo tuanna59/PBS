@@ -10,14 +10,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import team15.capstone2.pbs.R;
 import team15.capstone2.pbs.database.MyDbUtils;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private ImageView imageViewIcon;
     private Button loginButton;
     private TextView txtForgotPassword;
     private TextView txtSignUp;
@@ -32,11 +36,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void addListenerOnButton() {
+        imageViewIcon = (ImageView) findViewById(R.id.imageViewIcon);
         loginButton = (Button) findViewById(R.id.button3);
         txtForgotPassword = (TextView) findViewById(R.id.txtForgotPassword);
         txtSignUp = (TextView) findViewById(R.id.txtSignUp);
         txtUsername = (TextView) findViewById(R.id.txtUsername);
         txtPassword = (TextView) findViewById(R.id.txtPassword);
+
+        Picasso.get().load(R.drawable.app_logo).fit().centerCrop().into(imageViewIcon);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override

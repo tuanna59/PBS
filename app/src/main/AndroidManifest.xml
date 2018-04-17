@@ -107,7 +107,9 @@
         </activity>
         <activity android:name=".actitities.BookingDetailActivity"
             android:launchMode="singleTask">
-
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".actitities.MainActivity" />
         </activity>
     </application>
 

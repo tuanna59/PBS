@@ -58,6 +58,7 @@
             android:id="@+id/txtInfo1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAlignment="center"
             android:text="asdasdasdasd"/>
 
         <TextView
@@ -65,6 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtInfo1"
+            android:textAlignment="center"
             android:text="asdasdasdasd"/>
 
         <TextView
@@ -72,6 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtInfo2"
+            android:textAlignment="center"
             android:text="asdasdasdasd"/>
 
         <TextView
@@ -79,6 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtInfo3"
+            android:textAlignment="center"
             android:text="asdasdasdasd"/>
     </RelativeLayout>
 

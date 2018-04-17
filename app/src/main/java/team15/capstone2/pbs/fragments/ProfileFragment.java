@@ -27,6 +27,7 @@ import team15.capstone2.pbs.database.MyDbUtils;
 public class ProfileFragment extends Fragment {
 
     private TextView wallet;
+    private TextView txtUsername;
     private TextView carsManager;
     private TextView feedback;
     private TextView account;
@@ -60,7 +61,9 @@ public class ProfileFragment extends Fragment {
         feedback = (TextView) view.findViewById(R.id.txtFeedback);
         logout = (TextView) view.findViewById(R.id.txtLogout);
         ivQR = (ImageView) view.findViewById(R.id.qr_view);
+        txtUsername = (TextView) view.findViewById(R.id.txtUsername);
 
+        txtUsername.setText("User ID: " + MyDbUtils.getInstance().getClientID());
         qrViewer = new Dialog(getActivity(),android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
 
         qrURL = "http://api.qrserver.com/v1/create-qr-code/?data=" + MyDbUtils.getInstance().getClientID() + "&size=300x300";

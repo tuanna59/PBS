@@ -114,7 +114,7 @@ public class NotificationFragment extends Fragment {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             holder.notification_info.setText(dbUtils.getNotificationModels().get(position).getText());
-            holder.notification_time.setText(dbUtils.getNotificationModels().get(position).getTime());
+            holder.notification_time.setText(dbUtils.convertTime(dbUtils.getNotificationModels().get(position).getTime()));
         }
 
         @Override

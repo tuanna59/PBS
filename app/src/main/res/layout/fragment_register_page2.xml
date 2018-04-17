@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="80dp"
+    android:paddingLeft="@dimen/activity_hozizontal_margin"
+    android:paddingRight="@dimen/activity_hozizontal_margin"
+    android:paddingBottom="80dp"
+    android:background="@color/colorPrimaryDark"
+    tools:context=".fragments.RegisterPage2Fragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView"
+            style="@style/textView_style"
+            android:textSize="25dp"
+            android:text="Personal Information" />
+
+        <EditText
+            android:id="@+id/txtFullName"
+            style="@style/editText_style"
+            android:hint="Full Name"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/txtIdentifyNumber"
+            style="@style/editText_style"
+            android:hint="Identify Number"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/txtCarLicense"
+            style="@style/editText_style"
+            android:hint="Car License"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/txtType"
+            style="@style/editText_style"
+            android:hint="Type"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/btnSignUp"
+            style="@style/button_style"
+            android:text="Sign Up" />
+
+        <Button
+            android:id="@+id/btnBack"
+            style="@style/button_style"
+            android:text="Back" />
+
+    </LinearLayout>
+</RelativeLayout>

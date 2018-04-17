@@ -289,7 +289,7 @@ public class CarsFragment extends Fragment {
 
         // Clean all elements of the recycler
         public void clear() {
-//            dbUtils.getBookingDetails().clear();
+            dbUtils.getBookingDetails().clear();
             notifyDataSetChanged();
         }
 
@@ -410,4 +410,5 @@ public class CarsFragment extends Fragment {
             return null;
         }
     }
+
 }

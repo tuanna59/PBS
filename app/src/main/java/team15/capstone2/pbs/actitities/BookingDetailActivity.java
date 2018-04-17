@@ -2,6 +2,9 @@ package team15.capstone2.pbs.actitities;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -14,13 +17,17 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +38,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -41,6 +49,7 @@ import team15.capstone2.pbs.models.BookingDetail;
 
 public class BookingDetailActivity extends AppCompatActivity {
 
+    private TextView coverPage;
     private ImageView imgParking;
     private ImageView imgQR;
     private TextView txtParkingName;
@@ -54,30 +63,35 @@ public class BookingDetailActivity extends AppCompatActivity {
     private TextView txtCost;
     private TextView txtTitleCost, txtTitleDuration, txtTitleTimeCheckin, txtTitleTimeCheckout;
     private Button btnSlot1, btnSlot2, btnSlot3;
+    private Button btnSSlot1, btnSSlot2, btnSSlot3;
     private CardView cardViewBooking, cardViewSuggest;
     private Toolbar myToolbar;
     private Dialog qrViewer;
     private String qrURL;
     private int status = 0;
     private JSONObject data, data2;
+    JSONObject jsonSuggestSlot;
+    private ArrayList<Integer> suggestSlot;
     BookingDetail bookingDetail;
-    ProgressDialog progressDialog;
+    ProgressBar progressBar;
     long startTime, endTime, timeInMilliseconds = 0;
     Handler customHandler = new Handler();
     Handler customHandler2 = new Handler();
-
+    DecimalFormat formatter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booking_detail);
 
         bookingDetail = (BookingDetail) getIntent().getSerializableExtra("BOOKINGDETAIL");
+        MyDbUtils.getInstance().setClientID(getIntent().getIntExtra("CLIENTID", 0));
         findView();
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Notice!!!");
-        progressDialog.setMessage("Loading");
-        progressDialog.setCanceledOnTouchOutside(false);
+        RelativeLayout layout = findViewById(R.id.layout);
+        progressBar = new ProgressBar(BookingDetailActivity.this,null,android.R.attr.progressBarStyleLarge);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(100,100);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        layout.addView(progressBar,params);
 
         DataTask dataTask = new DataTask();
         dataTask.execute();
@@ -91,7 +105,11 @@ public class BookingDetailActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         // Enable the Up button
         ab.setDisplayHomeAsUpEnabled(true);
+        final Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_material);
+        upArrow.setColorFilter(getResources().getColor(R.color.bg_light), PorterDuff.Mode.SRC_ATOP);
+        ab.setHomeAsUpIndicator(upArrow);
 
+        coverPage = (TextView) findViewById(R.id.coverPage);
         cardViewBooking = (CardView) findViewById(R.id.card_viewBooking);
         imgParking = (ImageView) findViewById(R.id.imgParkingLot);
         imgQR = (ImageView) findViewById(R.id.imgQR);
@@ -111,6 +129,9 @@ public class BookingDetailActivity extends AppCompatActivity {
         btnSlot1 = (Button) findViewById(R.id.btnSlot1);
         btnSlot2 = (Button) findViewById(R.id.btnSlot2);
         btnSlot3 = (Button) findViewById(R.id.btnSlot3);
+        btnSSlot1 = (Button) findViewById(R.id.btnSSlot1);
+        btnSSlot2 = (Button) findViewById(R.id.btnSSlot12);
+        btnSSlot3 = (Button) findViewById(R.id.btnSSlot13);
 
         cardViewSuggest = (CardView) findViewById(R.id.card_viewSuggest);
 
@@ -206,6 +227,7 @@ public class BookingDetailActivity extends AppCompatActivity {
             }
             try {
                 if (data2.getInt("status") != status) {
+                    customHandler2.removeCallbacks(updateTimerThread2);
                     DataTask dataTask = new DataTask();
                     dataTask.execute();
                 }
@@ -261,19 +283,26 @@ public class BookingDetailActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog.show();
+            progressBar.setVisibility(View.VISIBLE);  //To show ProgressBar
+            // To disable the user interaction
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            progressDialog.dismiss();
+            progressBar.setVisibility(View.GONE);     // To Hide ProgressBar
+            // To get user interaction back
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
             if (errCode == 1) {
                 Toast.makeText(BookingDetailActivity.this, "Can't connect to server", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            DecimalFormat formatter = new DecimalFormat("#,### VND");
+//            Toast.makeText(BookingDetailActivity.this, "" + suggestSlot.size(), Toast.LENGTH_SHORT).show();
+            coverPage.setVisibility(View.GONE);
+            formatter = new DecimalFormat("#,### VND");
 
             Picasso.get().load(R.drawable.parking_lot_image).fit().into(imgParking);
             qrURL = "http://api.qrserver.com/v1/create-qr-code/?data=" + MyDbUtils.getInstance().getClientID() + "&size=300x300";
@@ -289,87 +318,16 @@ public class BookingDetailActivity extends AppCompatActivity {
 
                 switch (status) {
                     case -1:
-                        myToolbar.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, R.color.warning));
-                        cardViewBooking.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, R.color.warning));
-                        btnSlot2.setVisibility(View.VISIBLE);
-                        btnSlot2.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, R.color.warning));
-                        btnSlot2.setText("Canceled");
-
-                        cardViewSuggest.setVisibility(View.GONE);
-                        txtTitleTimeCheckin.setVisibility(View.GONE);
-                        txtTitleTimeCheckout.setVisibility(View.GONE);
-                        txtTitleDuration.setVisibility(View.GONE);
-                        txtTitleCost.setVisibility(View.GONE);
-                        txtTimeCheckin.setVisibility(View.GONE);
-                        txtTimeCheckout.setVisibility(View.GONE);
-                        txtDuration.setVisibility(View.GONE);
-                        txtCost.setVisibility(View.GONE);
-                        btnSlot1.setVisibility(View.INVISIBLE);
-                        btnSlot3.setVisibility(View.INVISIBLE);
-                        imgQR.setVisibility(View.GONE);
+                        setupCancelDetail();
                         break;
                     case 0:
-                        myToolbar.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, android.R.color.holo_orange_dark));
-                        cardViewBooking.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, android.R.color.holo_orange_dark));
-                        btnSlot1.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, android.R.color.holo_orange_dark));
-                        btnSlot1.setText("Pending");
-                        btnSlot3.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, android.R.color.holo_orange_dark));
-                        startCountDown(btnSlot3, data.getString("booking_time"));
-
-                        txtTitleDuration.setText("Move to the parking lot...");
-
-                        txtTitleTimeCheckin.setVisibility(View.GONE);
-                        txtTitleTimeCheckout.setVisibility(View.GONE);
-                        txtTimeCheckin.setVisibility(View.GONE);
-                        txtTimeCheckout.setVisibility(View.GONE);
-                        txtTitleCost.setVisibility(View.GONE);
-                        txtDuration.setVisibility(View.GONE);
-                        txtCost.setVisibility(View.GONE);
-                        btnSlot2.setVisibility(View.INVISIBLE);
-                        cardViewSuggest.setVisibility(View.GONE);
-                        imgQR.setVisibility(View.VISIBLE);
+                        setupPendingDetail();
                         break;
                     case 1:
-                        customHandler.removeCallbacks(updateTimerDownThread);
-                        myToolbar.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, R.color.light_green_light));
-                        cardViewBooking.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, R.color.light_green_light));
-                        btnSlot1.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, R.color.light_green_light));
-                        btnSlot3.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, R.color.light_green_light));
-
-                        txtTitleDuration.setText("Duration");
-                        txtTitleCost.setText("Estimated Cost");
-                        btnSlot1.setText("Checked In");
-                        txtTimeCheckin.setText(MyDbUtils.getInstance().convertTime(data.getString("start_time")));
-                        txtTimeCheckout.setText("...");
-                        start(btnSlot3, data.getString("start_time"));
-
-                        txtTitleCost.setVisibility(View.VISIBLE);
-                        txtTitleTimeCheckin.setVisibility(View.VISIBLE);
-                        txtTitleTimeCheckout.setVisibility(View.VISIBLE);
-                        txtTimeCheckin.setVisibility(View.VISIBLE);
-                        txtTimeCheckout.setVisibility(View.VISIBLE);
-                        txtTitleCost.setVisibility(View.VISIBLE);
-                        txtDuration.setVisibility(View.VISIBLE);
-                        txtCost.setVisibility(View.VISIBLE);
-                        btnSlot2.setVisibility(View.INVISIBLE);
+                        setupCheckedInDetail();
                         break;
                     case 2:
-                        stop(btnSlot3);
-                        myToolbar.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, R.color.cyan_light));
-                        cardViewBooking.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, R.color.cyan_light));
-                        btnSlot2.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, R.color.cyan_light));
-                        btnSlot2.setText("Checked Out");
-                        txtTitleCost.setText("Cost");
-                        txtTimeCheckin.setText(MyDbUtils.getInstance().convertTime(data.getString("start_time")));
-                        txtTimeCheckout.setText(MyDbUtils.getInstance().convertTime(data.getString("end_time")));
-                        txtDuration.setText(data.getInt("duration") + "");
-                        txtCost.setText(formatter.format(data.getDouble("cost")));
-
-                        cardViewSuggest.setVisibility(View.GONE);
-                        imgQR.setVisibility(View.GONE);
-                        btnSlot1.setVisibility(View.INVISIBLE);
-                        btnSlot3.setVisibility(View.INVISIBLE);
-                        btnSlot2.setVisibility(View.VISIBLE);
+                        setupCheckedOutDetail();
                         break;
                 }
 
@@ -395,7 +353,9 @@ public class BookingDetailActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(String... strings) {
             try {
-                int clientID = MyDbUtils.getInstance().getClientID();
+                SharedPreferences preferences = getSharedPreferences("config", MODE_PRIVATE);
+                int clientID = preferences.getInt("ClientID", 0);
+                MyDbUtils.getInstance().setClientID(clientID);
 
                 URL url = new URL("http://" + MyDbUtils.ip +
                         ":3001/booking-details/getBookingDetailByClientId?ClientId=" + clientID +
@@ -418,6 +378,35 @@ public class BookingDetailActivity extends AppCompatActivity {
                     data = jsonArray.getJSONArray("data").getJSONObject(0);
                 }
 
+                if (data.getInt("status") == 0) {
+                    url = new URL("http://" + MyDbUtils.ip +
+                            ":3001/booking-details/getSuggestSlotsByParkingLotId?ParkingLotId=" + data.getInt("parkinglot_id"));
+
+                    inputStreamReader = new InputStreamReader(url.openStream(), "UTF-8");
+
+                    bufferedReader = new BufferedReader(inputStreamReader);
+
+                    builder = new StringBuilder();
+                    String line2 = bufferedReader.readLine();
+                    while (line2 != null) {
+                        builder.append(line2);
+                        line2 = bufferedReader.readLine();
+                    }
+
+                    jsonSuggestSlot = new JSONObject(builder.toString());
+                    try {
+                        if (jsonSuggestSlot.getJSONArray("data").getJSONArray(0) != null) {
+                            JSONArray arr = jsonSuggestSlot.getJSONArray("data").getJSONArray(0);
+                            suggestSlot = new ArrayList<>();
+                            for (int i = 0; i < arr.length(); i++) {
+                                suggestSlot.add(arr.getJSONObject(i).getInt("rank"));
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
             } catch (ConnectException ex) {
                 errCode = 1;
             } catch (Exception ex) {
@@ -425,6 +414,126 @@ public class BookingDetailActivity extends AppCompatActivity {
             }
             return null;
         }
+    }
+
+    private void setupCheckedOutDetail() throws JSONException {
+        stop(btnSlot3);
+        customHandler2.removeCallbacks(updateTimerThread2);
+        myToolbar.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, R.color.cyan_light));
+        cardViewBooking.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, R.color.cyan_light));
+        btnSlot2.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, R.color.cyan_light));
+        btnSlot2.setText("Checked Out");
+        txtTitleCost.setText("Cost");
+        txtTimeCheckin.setText(MyDbUtils.getInstance().convertTime(data.getString("start_time")));
+        txtTimeCheckout.setText(MyDbUtils.getInstance().convertTime(data.getString("end_time")));
+        txtDuration.setText(data.getInt("duration") + "");
+        txtCost.setText(formatter.format(data.getDouble("cost")));
+
+        cardViewSuggest.setVisibility(View.GONE);
+        imgQR.setVisibility(View.GONE);
+        btnSlot1.setVisibility(View.INVISIBLE);
+        btnSlot3.setVisibility(View.INVISIBLE);
+        btnSlot2.setVisibility(View.VISIBLE);
+    }
+
+    private void setupCancelDetail() {
+        customHandler2.removeCallbacks(updateTimerThread2);
+        customHandler.removeCallbacks(updateTimerDownThread);
+        myToolbar.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, R.color.warning));
+        cardViewBooking.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, R.color.warning));
+        btnSlot2.setVisibility(View.VISIBLE);
+        btnSlot2.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, R.color.warning));
+        btnSlot2.setText("Canceled");
+
+        cardViewSuggest.setVisibility(View.GONE);
+        txtTitleTimeCheckin.setVisibility(View.GONE);
+        txtTitleTimeCheckout.setVisibility(View.GONE);
+        txtTitleDuration.setVisibility(View.GONE);
+        txtTitleCost.setVisibility(View.GONE);
+        txtTimeCheckin.setVisibility(View.GONE);
+        txtTimeCheckout.setVisibility(View.GONE);
+        txtDuration.setVisibility(View.GONE);
+        txtCost.setVisibility(View.GONE);
+        btnSlot1.setVisibility(View.INVISIBLE);
+        btnSlot3.setVisibility(View.INVISIBLE);
+        imgQR.setVisibility(View.GONE);
+    }
+
+    private void setupCheckedInDetail() {
+        customHandler.removeCallbacks(updateTimerDownThread);
+        myToolbar.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, R.color.light_green_light));
+        cardViewBooking.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, R.color.light_green_light));
+        btnSlot1.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, R.color.light_green_light));
+        btnSlot3.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, R.color.light_green_light));
+
+        txtTitleDuration.setText("Duration");
+        txtTitleCost.setText("Estimated Cost");
+        btnSlot1.setText("Checked In");
+        try {
+            txtTimeCheckin.setText(MyDbUtils.getInstance().convertTime(data.getString("start_time")));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        txtTimeCheckout.setText("...");
+        try {
+            start(btnSlot3, data.getString("start_time"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        cardViewSuggest.setVisibility(View.GONE);
+        txtTitleCost.setVisibility(View.VISIBLE);
+        txtTitleTimeCheckin.setVisibility(View.VISIBLE);
+        txtTitleTimeCheckout.setVisibility(View.VISIBLE);
+        txtTimeCheckin.setVisibility(View.VISIBLE);
+        txtTimeCheckout.setVisibility(View.VISIBLE);
+        txtTitleCost.setVisibility(View.VISIBLE);
+        txtDuration.setVisibility(View.VISIBLE);
+        txtCost.setVisibility(View.VISIBLE);
+        btnSlot2.setVisibility(View.INVISIBLE);
+    }
+
+    private void setupPendingDetail() throws JSONException, ParseException {
+        myToolbar.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, android.R.color.holo_orange_dark));
+        cardViewBooking.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, android.R.color.holo_orange_dark));
+        btnSlot1.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, android.R.color.holo_orange_dark));
+        btnSlot1.setText("Pending");
+        btnSlot3.setBackgroundColor(ContextCompat.getColor(BookingDetailActivity.this, android.R.color.holo_orange_dark));
+        startCountDown(btnSlot3, data.getString("booking_time"));
+
+        switch (suggestSlot.size()) {
+            case 1:
+                btnSSlot2.setText("" + suggestSlot.get(0));
+                btnSSlot1.setVisibility(View.INVISIBLE);
+                btnSSlot3.setVisibility(View.INVISIBLE);
+                break;
+            case 2:
+                btnSSlot1.setText("" + suggestSlot.get(0));
+                btnSSlot2.setVisibility(View.INVISIBLE);
+                btnSSlot3.setText("" + suggestSlot.get(1));
+                break;
+            case 3:
+                btnSSlot2.setText("" + suggestSlot.get(1));
+                btnSSlot1.setText("" + suggestSlot.get(0));
+                btnSSlot3.setText("" + suggestSlot.get(2));
+                break;
+        }
+
+
+        txtTitleDuration.setText("Move to the parking lot...");
+
+        txtTitleTimeCheckin.setVisibility(View.GONE);
+        txtTitleTimeCheckout.setVisibility(View.GONE);
+        txtTimeCheckin.setVisibility(View.GONE);
+        txtTimeCheckout.setVisibility(View.GONE);
+        txtTitleCost.setVisibility(View.GONE);
+        txtDuration.setVisibility(View.GONE);
+        txtCost.setVisibility(View.GONE);
+        btnSlot2.setVisibility(View.INVISIBLE);
+        cardViewSuggest.setVisibility(View.VISIBLE);
+        imgQR.setVisibility(View.VISIBLE);
     }
 
     private void setupQRview() {
@@ -445,6 +554,7 @@ public class BookingDetailActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         stop(btnSlot3);
+        customHandler.removeCallbacks(updateTimerDownThread);
         customHandler2.removeCallbacks(updateTimerThread2);
     }
 
@@ -452,14 +562,6 @@ public class BookingDetailActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         stop(btnSlot3);
-        customHandler2.removeCallbacks(updateTimerThread2);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (status == 0 || status == 1) {
-            customHandler2.postDelayed(updateTimerThread2, 2000);
-        }
-    }
 }

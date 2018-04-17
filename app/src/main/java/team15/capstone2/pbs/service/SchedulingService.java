@@ -28,6 +28,7 @@ import java.net.URL;
 
 import team15.capstone2.pbs.R;
 import team15.capstone2.pbs.actitities.BookingActivity;
+import team15.capstone2.pbs.actitities.BookingDetailActivity;
 import team15.capstone2.pbs.actitities.MainActivity;
 import team15.capstone2.pbs.database.MyDbUtils;
 import team15.capstone2.pbs.fragments.CarsFragment;
@@ -68,8 +69,9 @@ public class SchedulingService extends IntentService {
     }
 
     private void createNotificationType1() {
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        notificationIntent.putExtra("page", 1);
+        Intent notificationIntent = new Intent(this, BookingDetailActivity.class);
+        notificationIntent.putExtra("BOOKINGDETAIL", MyDbUtils.getInstance().getBookingDetails().get(0));
+        notificationIntent.putExtra("CLIENTID", MyDbUtils.getInstance().getClientID());
         notificationIntent
                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         int requestID = (int) System.currentTimeMillis();
@@ -77,7 +79,7 @@ public class SchedulingService extends IntentService {
                 .getActivity(this, requestID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_notification_24)
+                        .setSmallIcon(R.drawable.ic_alarm_black_24dp)
                         .setContentTitle(getString(R.string.app_name))
                         .setContentText("5 mins before cancel.")
                         .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
@@ -96,7 +98,9 @@ public class SchedulingService extends IntentService {
     }
 
     private void createNotificationType2() {
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+        Intent notificationIntent = new Intent(this, BookingDetailActivity.class);
+        notificationIntent.putExtra("BOOKINGDETAIL", MyDbUtils.getInstance().getBookingDetails().get(0));
+        notificationIntent.putExtra("CLIENTID", MyDbUtils.getInstance().getClientID());
         notificationIntent
                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         int requestID = (int) System.currentTimeMillis();
@@ -104,7 +108,7 @@ public class SchedulingService extends IntentService {
                 .getActivity(this, requestID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_notification_24)
+                        .setSmallIcon(R.drawable.ic_alarm_off_black_24dp)
                         .setContentTitle(getString(R.string.app_name))
                         .setContentText("Your booking was canceled.")
                         .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
@@ -157,6 +161,7 @@ public class SchedulingService extends IntentService {
             try {
                 SharedPreferences preferences = getSharedPreferences("config", MODE_PRIVATE);
                 int clientID = preferences.getInt("ClientID", 0);
+                MyDbUtils.getInstance().setClientID(clientID);
                 URL url = new URL("http://" + MyDbUtils.ip + ":3001/booking-details/getBookingByClientId?ClientId=" + clientID);
                 InputStreamReader inputStreamReader = new InputStreamReader(url.openStream(), "UTF-8");
                 ListBookingDetail listBookingDetail = new Gson().fromJson(inputStreamReader, ListBookingDetail.class);
