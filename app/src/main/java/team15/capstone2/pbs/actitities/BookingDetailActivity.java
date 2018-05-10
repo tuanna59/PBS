@@ -378,6 +378,8 @@ public class BookingDetailActivity extends AppCompatActivity {
                     data = jsonArray.getJSONArray("data").getJSONObject(0);
                 }
 
+
+
                 if (data.getInt("status") == 0) {
                     url = new URL("http://" + MyDbUtils.ip +
                             ":3001/booking-details/getSuggestSlotsByParkingLotId?ParkingLotId=" + data.getInt("parkinglot_id"));
