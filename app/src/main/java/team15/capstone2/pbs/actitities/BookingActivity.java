@@ -18,10 +18,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +40,8 @@ import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import team15.capstone2.pbs.R;
 import team15.capstone2.pbs.database.MyDbUtils;
@@ -53,6 +58,9 @@ public class BookingActivity extends AppCompatActivity {
     private TextView txtCapacity, txtPrice, placeLocation, timeUsable;
     ProgressBar progressBar;
     int notificationId;
+    ArrayList<String> listCars;
+    ArrayAdapter<String> adapterCars;
+    Spinner spinnerCars;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +81,24 @@ public class BookingActivity extends AppCompatActivity {
         txtPrice = (TextView) findViewById(R.id.txtPrice);
         placeLocation = (TextView) findViewById(R.id.place_location);
         timeUsable = (TextView) findViewById(R.id.time_usable);
+
+        spinnerCars = (Spinner) findViewById(R.id.spinnerLicense);
+        listCars = new ArrayList<String>();
+        listCars.addAll(Arrays.asList(getResources().getStringArray(R.array.deposit_method)));
+        adapterCars = new ArrayAdapter<String>(BookingActivity.this, android.R.layout.simple_spinner_item, listCars);
+        adapterCars.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCars.setAdapter(adapterCars);
+        spinnerCars.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         Intent intent = getIntent();
         parkingLot = (ParkingLot) intent.getSerializableExtra("PARKINGLOT");

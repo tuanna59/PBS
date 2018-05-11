@@ -82,6 +82,8 @@ public class SchedulingService extends IntentService {
                         .setSmallIcon(R.drawable.ic_alarm_black_24dp)
                         .setContentTitle(getString(R.string.app_name))
                         .setContentText("5 mins before cancel.")
+                        .addAction(R.drawable.ic_alarm_plus_black_24dp, "10mins more", contentIntent) // #0
+                        .addAction(R.drawable.ic_alarm_off_black_24dp, "Cancel", contentIntent)  // #1
                         .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                         .setDefaults(Notification.DEFAULT_SOUND)
                         .setAutoCancel(true)

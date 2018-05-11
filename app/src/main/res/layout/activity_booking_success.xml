@@ -59,7 +59,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:text="asdasdasdasd"/>
+            android:textSize="20sp"
+            android:text="Booking Information"/>
 
         <TextView
             android:id="@+id/txtInfo2"
@@ -96,7 +97,7 @@
         android:layout_marginTop="8dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:text="Please drive to the parking lot in 20 minutes. If then your booking will be auto canceled."
+        android:text="Please drive to the parking lot in 20 minutes.\nIf then your booking will be canceled."
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textSize="20sp"

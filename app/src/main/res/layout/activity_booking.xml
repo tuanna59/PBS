@@ -76,6 +76,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
                 android:layout_marginBottom="2dp"
+                android:textSize="18sp"
                 tools:text="Capacity: 100 slots" />
 
             <TextView
@@ -83,6 +84,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
+                android:textSize="18sp"
                 tools:text="Price: 15.000 VND/hour" />
 
             <TextView
@@ -99,29 +101,34 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
+                android:textSize="18sp"
                 tools:text="3 Quang Trung, Da Nang" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/bottomtab_2"
-                android:text="Time Usage"
-                android:textSize="20sp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp" />
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/time_usables"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                tools:text="You have ..." />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="Choose Car"
+                    android:textColor="@color/bottomtab_1"
+                    android:textSize="20sp" />
 
-            <android.support.v7.widget.AppCompatSpinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/spinnerLicense"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="30sp">
 
-            </android.support.v7.widget.AppCompatSpinner>
+                </android.support.v7.widget.AppCompatSpinner>
+
+            </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
     <LinearLayout
