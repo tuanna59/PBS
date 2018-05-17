@@ -67,24 +67,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtInfo1"
-            android:textAlignment="center"
-            android:text="asdasdasdasd"/>
+            android:text="03 Quang Trung"
+            android:textAlignment="center" />
 
         <TextView
             android:id="@+id/txtInfo3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtInfo2"
-            android:textAlignment="center"
-            android:text="asdasdasdasd"/>
+            android:text="15.000 VND / hour"
+            android:textAlignment="center" />
 
         <TextView
             android:id="@+id/txtInf4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtInfo3"
-            android:textAlignment="center"
-            android:text="asdasdasdasd"/>
+            android:text="12:00 PM 01/05/2018"
+            android:textAlignment="center" />
     </RelativeLayout>
 
     <TextView
