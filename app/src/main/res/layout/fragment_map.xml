@@ -16,6 +16,14 @@
             android:layout_marginBottom="50dp"
             android:id="@+id/map" />
 
+        <fragment
+            android:id="@+id/place_autocomplete"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+            />
+
     </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton

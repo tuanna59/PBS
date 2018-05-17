@@ -21,7 +21,7 @@ public class AlarmUtils {
                 time = 15 * 60;
                 break;
             case 2:
-                time = 4 * 60 + 30;
+                time = 5 * 60 + 15;
                 break;
             default:
                 time = type * 60 - 59;

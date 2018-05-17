@@ -34,6 +34,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -73,6 +78,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
     private GoogleMap mGoogleMap;
     private MapView mMapView;
     private View mView;
+    PlaceAutocompleteFragment placeAutoComplete;
 
     public MapFragment() {
     }
@@ -114,6 +120,32 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
             mMapView.onResume();
             mMapView.getMapAsync(this);
         }
+
+        mView.clearFocus();
+
+        placeAutoComplete = (PlaceAutocompleteFragment) getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete);
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setCountry("VN")
+                .build();
+
+        placeAutoComplete.setFilter(typeFilter);
+
+        placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+
+                CameraPosition ParkingLot = CameraPosition.builder().target(place.getLatLng())
+                        .zoom(15).bearing(0).tilt(45).build();
+
+                mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(ParkingLot));
+                Log.d("Maps", "Place selected: " + place.getName());
+            }
+
+            @Override
+            public void onError(Status status) {
+                Log.d("Maps", "An error occurred: " + status);
+            }
+        });
 
         ParkingLotsTask parkingLotsTask = new ParkingLotsTask();
         parkingLotsTask.execute("1");
@@ -333,7 +365,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
     @Override
     public void onResume() {
         super.onResume();
-        loadMarker();
+//        loadMarker();
 //        Toast.makeText(getActivity(),"Frag map resume", Toast.LENGTH_SHORT).show();
     }
 }
