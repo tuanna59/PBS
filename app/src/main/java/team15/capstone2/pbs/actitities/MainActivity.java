@@ -1,11 +1,15 @@
 package team15.capstone2.pbs.actitities;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.annotation.ColorRes;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -50,11 +54,32 @@ public class MainActivity extends AppCompatActivity {
     private NotificationFragment notificationFragment;
     private ProfileFragment profileFragment;
 
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences preferences = getSharedPreferences("config", MODE_PRIVATE);
         int id = preferences.getInt("ClientID", 0);
+
+        int PERMISSION_ALL = 1;
+        String[] PERMISSIONS = {
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.INTERNET};
+        if(!hasPermissions(this, PERMISSIONS)){
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+        }
 
         if (id == 0) {
             MyDbUtils.getInstance().setClientID(id);
@@ -65,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             setContentView(R.layout.activity_main);
         }
+
         bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
 
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(getString(R.string.tab_name1), R.drawable.ic_map_24, fetchColor(R.color.bottomtab_0));
