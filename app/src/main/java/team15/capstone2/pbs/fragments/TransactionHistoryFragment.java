@@ -96,16 +96,21 @@ public class TransactionHistoryFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.ic_trans.setImageDrawable(mIcTrans[position % mIcTrans.length]);
-            holder.type_trans.setText((dbUtils.getTransactions().get(position).getChanged_amount() < 0) ? "Spent" : "Deposit" );
-            DecimalFormat formatter = new DecimalFormat("#,### VND");
-            holder.amount_trans.setText(formatter.format(dbUtils.getTransactions().get(position).getChanged_amount()));
-            holder.txtTransDate.setText(dbUtils.convertTime(dbUtils.getTransactions().get(position).getTimestamp()));
+            if (dbUtils.getTransactions().get(position).getTimestamp() != null) {
+                holder.ic_trans.setImageDrawable(mIcTrans[position % mIcTrans.length]);
+                holder.type_trans.setText((dbUtils.getTransactions().get(position).getChanged_amount() < 0) ? "Spent" : "Deposit" );
+                DecimalFormat formatter = new DecimalFormat("#,### VND");
+                holder.amount_trans.setText(formatter.format(dbUtils.getTransactions().get(position).getChanged_amount()));
+                holder.txtTransDate.setText(dbUtils.convertTime(dbUtils.getTransactions().get(position).getTimestamp()));
+            }
         }
 
         @Override
         public int getItemCount() {
-            return dbUtils.getTransactions().size();
+            if (dbUtils.getTransactions() != null) {
+                return dbUtils.getTransactions().size();
+            }
+            return 0;
         }
     }
 

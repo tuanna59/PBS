@@ -19,24 +19,30 @@
         android:layout_height="match_parent"
         android:visibility="visible">
 
-
-        <Button
-            android:id="@+id/button5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="70dp"
-            android:text="Button" />
-
-        <TextView
-            android:id="@+id/textView7"
+        <EditText
+            android:id="@+id/txtCardNumber"
             android:layout_width="313dp"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="31dp"
-            android:text="TextView" />
+            android:hint="Card Number" />
+
+        <EditText
+            android:id="@+id/txtSerialNumber"
+            android:layout_width="313dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/txtCardNumber"
+            android:hint="Serial Number" />
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/txtSerialNumber"
+            android:text="Deposit" />
     </RelativeLayout>
 
     <RelativeLayout

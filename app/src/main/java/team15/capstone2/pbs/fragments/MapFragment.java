@@ -365,7 +365,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
     @Override
     public void onResume() {
         super.onResume();
-//        loadMarker();
+        loadMarker();
 //        Toast.makeText(getActivity(),"Frag map resume", Toast.LENGTH_SHORT).show();
     }
 }
