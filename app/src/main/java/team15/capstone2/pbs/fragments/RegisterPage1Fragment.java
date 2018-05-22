@@ -22,7 +22,6 @@ import team15.capstone2.pbs.actitities.RegisterActivity;
 public class RegisterPage1Fragment extends Fragment {
 
     private ImageView imageViewIcon;
-    private EditText txtUsername, txtEmail, txtPassword, txtConfirmPassword;
     private Button btnNext;
 
     public RegisterPage1Fragment() {
@@ -35,20 +34,20 @@ public class RegisterPage1Fragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_register_page1, container, false);
         imageViewIcon = (ImageView) view.findViewById(R.id.imageViewIcon);
         btnNext = (Button) view.findViewById(R.id.btnNext);
-        txtUsername = (EditText) view.findViewById(R.id.txtUsername);
-        txtEmail = (EditText) view.findViewById(R.id.txtEmail);
-        txtPassword = (EditText) view.findViewById(R.id.txtPassword);
-        txtConfirmPassword = (EditText) view.findViewById(R.id.txtConfirmPassword);
+        RegisterPage2Fragment.txtUsername = (EditText) view.findViewById(R.id.txtUsername);
+        RegisterPage2Fragment.txtEmail = (EditText) view.findViewById(R.id.txtEmail);
+        RegisterPage2Fragment.txtPassword = (EditText) view.findViewById(R.id.txtPassword);
+        RegisterPage2Fragment.txtConfirmPassword = (EditText) view.findViewById(R.id.txtConfirmPassword);
 
         Picasso.get().load(R.drawable.app_logo).fit().centerCrop().into(imageViewIcon);
 
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                txtEmail.getText();
-                txtUsername.getText();
-                txtPassword.getText();
-                txtConfirmPassword.getText();
+                RegisterPage2Fragment.txtEmail.getText();
+                RegisterPage2Fragment.txtUsername.getText();
+                RegisterPage2Fragment.txtPassword.getText();
+                RegisterPage2Fragment.txtConfirmPassword.getText();
                 RegisterActivity.viewPager.setCurrentItem(1);
             }
         });

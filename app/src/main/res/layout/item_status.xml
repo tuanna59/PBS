@@ -27,7 +27,7 @@
             tools:src="@drawable/ticket" />
 
         <TextView
-            android:id="@+id/parking_name"
+            android:id="@+id/txtCarLicense"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -41,7 +41,7 @@
             android:id="@+id/available_slots"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/parking_name"
+            android:layout_toRightOf="@+id/txtCarLicense"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="50dp"
             android:layout_marginTop="5dp"
@@ -52,10 +52,10 @@
             tools:text="13:00 03/12/2013" />
 
         <TextView
-            android:id="@+id/parking_address"
+            android:id="@+id/txtType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/parking_name"
+            android:layout_below="@+id/txtCarLicense"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="2dp"
             android:layout_toRightOf="@+id/ic_trans"
@@ -70,7 +70,7 @@
             android:id="@+id/txtCheckinTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/parking_address"
+            android:layout_below="@+id/txtType"
             android:layout_toRightOf="@+id/ic_trans"
             android:layout_marginTop="1dp"
             android:layout_marginLeft="10dp"

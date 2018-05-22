@@ -46,6 +46,7 @@ import java.util.Arrays;
 import team15.capstone2.pbs.R;
 import team15.capstone2.pbs.database.MyDbUtils;
 import team15.capstone2.pbs.models.BookingDetail;
+import team15.capstone2.pbs.models.CarModel;
 import team15.capstone2.pbs.models.ListBookingDetail;
 import team15.capstone2.pbs.models.ParkingLot;
 import team15.capstone2.pbs.utils.AlarmUtils;
@@ -58,8 +59,7 @@ public class BookingActivity extends AppCompatActivity {
     private TextView txtCapacity, txtPrice, placeLocation, timeUsable;
     ProgressBar progressBar;
     int notificationId;
-    ArrayList<String> listCars;
-    ArrayAdapter<String> adapterCars;
+    ArrayAdapter<CarModel> adapterCars;
     Spinner spinnerCars;
 
     @Override
@@ -83,9 +83,7 @@ public class BookingActivity extends AppCompatActivity {
         timeUsable = (TextView) findViewById(R.id.time_usable);
 
         spinnerCars = (Spinner) findViewById(R.id.spinnerLicense);
-        listCars = new ArrayList<String>();
-        listCars.addAll(Arrays.asList(getResources().getStringArray(R.array.deposit_method)));
-        adapterCars = new ArrayAdapter<String>(BookingActivity.this, android.R.layout.simple_spinner_item, listCars);
+        adapterCars = new ArrayAdapter<CarModel>(BookingActivity.this, android.R.layout.simple_spinner_item, MyDbUtils.getInstance().getCars());
         adapterCars.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCars.setAdapter(adapterCars);
         spinnerCars.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -168,6 +166,7 @@ public class BookingActivity extends AppCompatActivity {
                 return;
             }
             Intent intent = new Intent(BookingActivity.this, BookingSuccessActivity.class);
+            intent.putExtra("BOOKING_INFO", MyDbUtils.getInstance().getBookingDetails().get(MyDbUtils.getInstance().getBookingDetails().size() - 1));
             startActivity(intent);
             createNotification();
             AlarmUtils.create(BookingActivity.this, 1);

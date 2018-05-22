@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.ConnectException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import team15.capstone2.pbs.R;
 import team15.capstone2.pbs.database.MyDbUtils;
@@ -95,6 +105,71 @@ public class LoginActivity extends AppCompatActivity {
                 LoginActivity.this.startActivity(myIntent);
             }
         });
+    }
+
+    class LoginTask extends AsyncTask<String, Void, Void>
+    {
+        private boolean isSuccess = false;
+        StringBuilder builder;
+        private int errCode = -1;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (!isSuccess) {
+                return;
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            try {
+                URL url = new URL("http://" + MyDbUtils.ip + ":3001/authorizeClient");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Accept", "application/json");
+                connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                connection.setConnectTimeout(5000);
+
+                String payload = "{\"client_id\": " + Integer.parseInt(strings[0]) + ", \"booking_time\": \"" + strings[1] + "\"}";
+
+                OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
+                writer.write(payload);
+                writer.close();
+
+                InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                builder = new StringBuilder();
+                String line = bufferedReader.readLine();
+                while (line != null) {
+                    builder.append(line);
+                    line = bufferedReader.readLine();
+                }
+
+                JSONObject jsonObject = new JSONObject(builder.toString());
+                if (jsonObject.has("isSuccess")) {
+                    isSuccess = jsonObject.getBoolean("isSuccess");
+                }
+                connection.disconnect();
+            } catch (ConnectException ex) {
+                errCode = 1;
+            } catch (Exception ex) {
+                Log.e("asd", ex.toString());
+            }
+            return null;
+        }
     }
 
 }

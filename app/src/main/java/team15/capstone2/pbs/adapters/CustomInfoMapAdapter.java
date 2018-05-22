@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
-import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 
@@ -27,8 +26,8 @@ public class CustomInfoMapAdapter implements GoogleMap.InfoWindowAdapter {
         LayoutInflater inflater = this.context.getLayoutInflater();
         View window = inflater.inflate(R.layout.item_info_window, null);
         ImageView imgParking = (ImageView) window.findViewById(R.id.img_parking);
-        TextView parkingName = (TextView) window.findViewById(R.id.parking_name);
-        TextView parkingAddress = (TextView) window.findViewById(R.id.parking_address);
+        TextView parkingName = (TextView) window.findViewById(R.id.txtCarLicense);
+        TextView parkingAddress = (TextView) window.findViewById(R.id.txtType);
         TextView parkingSlots = (TextView) window.findViewById(R.id.available_slots);
         TextView parkingPrice = (TextView) window.findViewById(R.id.parking_price);
         TextView txtNote = (TextView) window.findViewById(R.id.txtNote);

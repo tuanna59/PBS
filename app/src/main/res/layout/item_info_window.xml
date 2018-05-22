@@ -18,7 +18,7 @@
             tools:src="@drawable/app_logo" />
 
         <TextView
-            android:id="@+id/parking_name"
+            android:id="@+id/txtCarLicense"
             android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_toRightOf="@+id/parking_name"
+            android:layout_toRightOf="@+id/txtCarLicense"
             android:gravity="right"
             android:layout_marginTop="5dp"
             android:paddingRight="5dp"
@@ -43,10 +43,10 @@
             tools:text="20" />
 
         <TextView
-            android:id="@+id/parking_address"
+            android:id="@+id/txtType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/parking_name"
+            android:layout_below="@+id/txtCarLicense"
             android:layout_toRightOf="@+id/img_parking"
             android:layout_marginLeft="10dp"
             android:ellipsize="end"
@@ -59,7 +59,7 @@
             android:id="@+id/parking_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/parking_address"
+            android:layout_below="@+id/txtType"
             android:layout_toRightOf="@+id/img_parking"
             android:layout_marginLeft="10dp"
             android:textColor="@color/bottomtab_2"

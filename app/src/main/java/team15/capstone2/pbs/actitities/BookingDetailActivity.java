@@ -140,7 +140,7 @@ public class BookingDetailActivity extends AppCompatActivity {
         imgQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                qrViewer.show();
+//                qrViewer.show();
             }
         });
     }

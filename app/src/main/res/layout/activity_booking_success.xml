@@ -41,6 +41,7 @@
         app:layout_constraintVertical_bias="0.29" />
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -58,31 +59,35 @@
             android:id="@+id/txtInfo1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="Booking Information"
+            android:textStyle="bold"
             android:textAlignment="center"
-            android:textSize="20sp"
-            android:text="Booking Information"/>
+            android:textSize="24sp" />
 
         <TextView
-            android:id="@+id/txtInfo2"
+            android:id="@+id/txtParkingAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtInfo1"
+            android:textSize="20sp"
             android:text="03 Quang Trung"
             android:textAlignment="center" />
 
         <TextView
-            android:id="@+id/txtInfo3"
+            android:id="@+id/txtPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txtInfo2"
+            android:textSize="20sp"
+            android:layout_below="@+id/txtParkingAddress"
             android:text="15.000 VND / hour"
             android:textAlignment="center" />
 
         <TextView
-            android:id="@+id/txtInf4"
+            android:id="@+id/txtBookingTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txtInfo3"
+            android:textSize="20sp"
+            android:layout_below="@+id/txtPrice"
             android:text="12:00 PM 01/05/2018"
             android:textAlignment="center" />
     </RelativeLayout>
@@ -100,39 +105,38 @@
         android:text="Please drive to the parking lot in 20 minutes.\nIf then your booking will be canceled."
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:textSize="20sp"
+        android:textColor="@color/colorBottomNavigationNotification"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
-        app:layout_constraintVertical_bias="0.788" />
+        app:layout_constraintVertical_bias="0.929" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="68dp"
         android:layout_marginTop="8dp"
         android:text="Cancel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+        app:layout_constraintVertical_bias="0.276" />
 
     <Button
         android:id="@+id/button4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Direction"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button2"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+        app:layout_constraintVertical_bias="0.276" />
 </android.support.constraint.ConstraintLayout>

@@ -2,6 +2,7 @@ package team15.capstone2.pbs.actitities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.EditText;
 
 import team15.capstone2.pbs.R;
 import team15.capstone2.pbs.adapters.BottomBarAdapter;

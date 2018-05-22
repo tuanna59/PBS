@@ -23,16 +23,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -49,14 +42,10 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import team15.capstone2.pbs.R;
-import team15.capstone2.pbs.actitities.BookingActivity;
 import team15.capstone2.pbs.actitities.BookingDetailActivity;
-import team15.capstone2.pbs.actitities.MainActivity;
 import team15.capstone2.pbs.database.MyDbUtils;
 import team15.capstone2.pbs.models.BookingDetail;
 import team15.capstone2.pbs.models.ListBookingDetail;
-import team15.capstone2.pbs.models.ListParkingLot;
-import team15.capstone2.pbs.models.ParkingLot;
 
 public class CarsFragment extends Fragment {
 
@@ -142,8 +131,8 @@ public class CarsFragment extends Fragment {
 
         public ViewHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.item_status, parent, false));
-            carLicense = (TextView) itemView.findViewById(R.id.parking_name);
-            parkingAddress = (TextView) itemView.findViewById(R.id.parking_address);
+            carLicense = (TextView) itemView.findViewById(R.id.txtCarLicense);
+            parkingAddress = (TextView) itemView.findViewById(R.id.txtType);
             parkingTime = (TextView) itemView.findViewById(R.id.available_slots);
             btnAction = (Button) itemView.findViewById(R.id.action_button);
             ic_trans = (ImageView) itemView.findViewById(R.id.ic_trans);

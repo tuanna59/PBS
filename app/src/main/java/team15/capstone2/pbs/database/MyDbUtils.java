@@ -18,6 +18,7 @@ import java.util.TimeZone;
 import team15.capstone2.pbs.actitities.BookingActivity;
 import team15.capstone2.pbs.actitities.MainActivity;
 import team15.capstone2.pbs.models.BookingDetail;
+import team15.capstone2.pbs.models.CarModel;
 import team15.capstone2.pbs.models.ListBookingDetail;
 import team15.capstone2.pbs.models.NotificationModel;
 import team15.capstone2.pbs.models.ParkingLot;
@@ -31,6 +32,7 @@ public class MyDbUtils {
     private ArrayList<BookingDetail> bookingDetails;
     private ArrayList<NotificationModel> notificationModels;
     private ArrayList<PaymentDetail> transactions;
+    private ArrayList<CarModel> cars;
     private int clientID;
     private double balance;
 
@@ -100,6 +102,17 @@ public class MyDbUtils {
 
     public void setNotificationModels(ArrayList<NotificationModel> notificationModels) {
         this.notificationModels = notificationModels;
+    }
+
+    public ArrayList<CarModel> getCars() {
+        if (cars == null) {
+            cars = new ArrayList<>();
+        }
+        return cars;
+    }
+
+    public void setCars(ArrayList<CarModel> cars) {
+        this.cars = cars;
     }
 
     public ParkingLot findParkingLot(int id) {
